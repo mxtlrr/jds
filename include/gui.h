@@ -1,6 +1,7 @@
 #pragma once
 
 #include <raylib.h>
+#include <string.h>
 
 /* Slider */
 
@@ -23,3 +24,14 @@ void DrawSlider(Slider s);
 /* Buttons */
 
 /* Input */
+#define INP_MAX 20
+typedef struct Input {
+  char input_data[INP_MAX];
+  Vector2 input_area;
+  Vector2 end_area;
+  int counter;
+} Input;
+
+bool MouseOverInputArea(Vector2 i, Vector2 e);
+void UpdateInputBox(Input* i);
+void DrawInput(Input i);

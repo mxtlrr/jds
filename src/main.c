@@ -9,12 +9,25 @@ int main(void){
   SetTargetFPS(60);
 
   Vector2 fbLoc = (Vector2){500, 200};
-  Slider s = {
+
+
+  /* GUI components */
+  Slider s = { // Escape value
     .min = 0.0f, .max = 250.0f, .pos = {.x = 50, .y = 500},
     .div_value = 15,
     .Body = {
       .w = s.max, .h = 20, .xPos = s.pos.x, .yPos = s.pos.y-10
     }
+  };
+
+  Input c = {
+    .counter = 0, .input_area = {.x = 50, .y = 375},
+    .end_area = {.x = 300,.y = c.input_area.y+35}
+  };
+
+  Input color = {
+    .counter = 0, .input_area = {.x = 50, .y = 275},
+    .end_area = {.x = 300, .y = color.input_area.y+35}
   };
 
   while(!WindowShouldClose()){
@@ -24,9 +37,17 @@ int main(void){
       Vector2 mouse = GetMousePosition();
       UpdateSlider(&s, mouse);
 
+      UpdateInputBox(&c); DrawInput(c);
+      UpdateInputBox(&color); DrawInput(color);
+
+      // Text that tells you what we're doing
+      DrawText("Color for points in the set", color.input_area.x-10, color.input_area.y-40, 20, BLACK);
+      DrawText("c, for f(z) = z^2 + c", c.input_area.x+15, c.input_area.y-40, 20, BLACK);
       DrawText(TextFormat("R=%.3f", s.actual), s.pos.x+(s.pos.x/2), s.pos.y-40, 20, BLACK);
+
       // Framebuffer area
       DrawRectangleLines(fbLoc.x, fbLoc.y, WIDTH, HEIGHT, BLACK);
+      // TODO: framebuffer logic and other stuff.
     EndDrawing();
   }
 
