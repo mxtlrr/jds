@@ -5,7 +5,8 @@ ifeq ($(OS),Windows_NT)
 	LDFLAGS += -lgdi32 -lwinmm
 endif
 
-CFLAGS := -Iinclude $(LDFLAGS)
+GIT_VERSION := "$(shell git describe --abbrev=6 --always --tags)"
+CFLAGS := -Iinclude -DVERSION=\"$(GIT_VERSION)\" $(LDFLAGS)
 
 SRC_DIR := src
 OBJ_DIR := obj
