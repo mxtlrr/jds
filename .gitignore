@@ -1,0 +1,11 @@
+.vscode/
+
+export/
+out/
+
+bin/
+obj/
+
+*swp
+
+test/
