@@ -28,6 +28,14 @@ int main(void){
     }
   };
 
+  Slider step = {
+    .min = 0.0f, .max = 250.0f, .pos = {.x = 50, .y = 200 },
+    .div_value = 2500.0f,
+    .Body = {
+      .w = 250.0f, .h = 20, .xPos = step.pos.x, .yPos = step.pos.y-10
+    }
+  };
+
   Input c = {
     .counter = 0, .input_area = {.x = 50, .y = 375},
     .end_area = {.x = 300,.y = c.input_area.y+35},
@@ -42,20 +50,22 @@ int main(void){
 
   
   init_fb();
-
   while(!WindowShouldClose()){
     if(IsKeyPressed(KEY_R)){
       Complex cc = str_to_complex(c.input_data);
       printf("[DEBUG] complex number is %.3f+%.3fi\n", cc.re, cc.im);
-      points = GenerateJuliaSet(cc, (int)s.actual);
+      points = GenerateJuliaSet(cc, (int)s.actual, step.actual);
       remap_points(points); // remap points
     }
 
+    if(IsKeyPressed(KEY_E)) clear_fb();
+
     BeginDrawing();
       ClearBackground(WHITE);
-      DrawSlider(s);
+      DrawSlider(s); DrawSlider(step);
       Vector2 mouse = GetMousePosition();
       UpdateSlider(&s, mouse);
+      UpdateSlider(&step, mouse);
 
       // Clamp actual to a int.
       s.actual = (int)s.actual;
@@ -64,6 +74,7 @@ int main(void){
       UpdateInputBox(&color); DrawInput(color);
 
       // Text that tells you what we're doing
+      DrawText(TextFormat("Step value: %.3f", step.actual), step.pos.x+(step.pos.x)/2, step.pos.y-40, 20, BLACK);
       DrawText("Color for points in the set", color.input_area.x-10, color.input_area.y-40, 20, BLACK);
       DrawText("c, for f(z) = z^2 + c", c.input_area.x+15, c.input_area.y-40, 20, BLACK);
       DrawText(TextFormat("R=%.0f", s.actual), s.pos.x+(s.pos.x/2), s.pos.y-40, 20, BLACK);
@@ -74,7 +85,7 @@ int main(void){
 
       for(int i = 0; i < points; i++){
         Point r = remappedPoints[i];
-        putpixel(r.x, r.y, 0x000f);
+        putpixel(r.x, r.y, palette[JuliaSet[i].iterations]);
       }
       render_fb(fbLoc);
 
@@ -82,6 +93,8 @@ int main(void){
       int fps = GetFPS();
       DrawText(TextFormat("FPS: %3d", fps), 10, 10, 20, DARKGREEN);
       DrawText("[DEBUG] Press R to render Julia set!", 10, 40, 20, BLACK);
+      DrawText("[DEBUG] Press E to clear framebuffer", 10, 60, 20, BLACK);
+      
     EndDrawing();
   }
 

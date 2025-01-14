@@ -1,5 +1,11 @@
 #include "math/julia.h"
 
+uint16_t palette[] = {
+  0x000f, 0x001f, 0x002f, 0x003f,
+  0x004f, 0x005f, 0x006f, 0x007f,
+  0x008f, 0x009f, 0x00af, 0x00bf,
+  0x00cf, 0x00df, 0x00ef, 0x00ff
+};
 
 Result does_point_escape(Complex z, Complex seed, int R){
   Complex z_n = z; // no im?
@@ -15,13 +21,13 @@ Result does_point_escape(Complex z, Complex seed, int R){
 
 
 
-Result JuliaSet[9000];
-int GenerateJuliaSet(Complex seed, int R){
+Result JuliaSet[300000];
+int GenerateJuliaSet(Complex seed, int R, float step){
   int counter = 0;
   float x=0;float y=0;
-  for(y = -10; y < 10; y+=0.1){
-    for(x = -10; x < 10; x+=0.1){
-      Complex point = {.re = x, .im = y}; // Cursed!
+  for(y = -10; y < 10; y+=step){
+    for(x = -10; x < 10; x+=step){
+      Complex point = {.re = x, .im = y};
       Result r = does_point_escape(point,seed,R);
       if(r.stays_in){
         // printf("%.3f+%.3fi is in the Julia set for seed=(%.3f+%.3fi)\n",
@@ -36,10 +42,10 @@ int GenerateJuliaSet(Complex seed, int R){
   return counter;
 }
 
-Point remappedPoints[9000];
+Point remappedPoints[300000];
 void remap_points(int n_points){
   for(int i = 0; i < n_points; i++){
-    Point p = (Point){ .x = (JuliaSet[i].c.re*10), .y = (JuliaSet[i].c.im*10) };
+    Point p = (Point){ .x = (JuliaSet[i].c.re*100), .y = (JuliaSet[i].c.im*100) };
     remappedPoints[i] = (Point){320+(p.x), 240+(p.y)};
   }
 }
