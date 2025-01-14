@@ -58,8 +58,6 @@ int main(void){
       remap_points(points); // remap points
     }
 
-    if(IsKeyPressed(KEY_E)) clear_fb();
-
     BeginDrawing();
       ClearBackground(WHITE);
       DrawSlider(s); DrawSlider(step);

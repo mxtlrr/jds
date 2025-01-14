@@ -3,7 +3,7 @@
 uint16_t palette[] = {
   0x000f, 0x001f, 0x002f, 0x003f,
   0x004f, 0x005f, 0x006f, 0x007f,
-  0x008f, 0x009f, 0x00af, 0x00bf,
+  0x008f, 0x009f, 0x00ff, 0x00bf,
   0x00cf, 0x00df, 0x00ef, 0x00ff
 };
 
@@ -13,10 +13,10 @@ Result does_point_escape(Complex z, Complex seed, int R){
     z_n = ComplexMul(z_n, z_n); // z_n^2.
     z_n = ComplexAdd(z_n, seed);
     if(AbsComplex(z_n) > R){
-      return (Result){ .iterations = i, .stays_in = false };
+      return (Result){ .iterations = R, .stays_in = false };
     }
   }
-  return (Result){.iterations = 0, .stays_in = true, .c = z };
+  return (Result){.iterations = AbsComplex(z_n), .stays_in = true, .c = z };
 }
 
 
