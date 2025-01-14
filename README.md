@@ -9,6 +9,10 @@ TODO
 ## Using JDS
 TODO
 
+## Screenshot
+![](./img/13Jan2025-JDS.png)
+*JDS rendering $f_c(z) = z^2 + 0.4+0.4i$ with an escape value of $10$*
+
 # What's a Julia Set?
 The Julia set, $J$, is defined from a function $f_c$. Values in this set are known
 to be "chaotic", meaning that a small change in any element could completely
