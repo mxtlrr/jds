@@ -4,6 +4,9 @@
 #include "fb.h"
 #include "gui.h"
 
+#include "math/complex.h"
+#include "math/parse-input.h"
+
 int main(void){
   InitWindow(1200, 768, TextFormat("JDS git-%s", VERSION));
   SetTargetFPS(60);
