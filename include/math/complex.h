@@ -18,3 +18,6 @@ Complex ComplexSub(Complex a, Complex b);
 
 // a*b
 Complex ComplexMul(Complex a, Complex b);
+
+#include <math.h>
+float AbsComplex(Complex a);

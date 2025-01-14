@@ -17,3 +17,7 @@ Complex ComplexMul(Complex a, Complex b){
   return (Complex){.re = ((a.re*b.re)-(a.im*b.im)),
                     .im = ((a.re*b.im)+(a.im*b.re))};
 }
+
+float AbsComplex(Complex a){
+  return sqrt((a.re*a.re)+(a.im*a.im));
+}

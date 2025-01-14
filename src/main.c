@@ -6,8 +6,13 @@
 
 #include "math/complex.h"
 #include "math/parse-input.h"
+#include "math/julia.h"
 
+void _(){}
 int main(void){
+  int points = 0;
+
+  SetTraceLogCallback(_);
   InitWindow(1200, 768, TextFormat("JDS git-%s", VERSION));
   SetTargetFPS(60);
 
@@ -37,7 +42,15 @@ int main(void){
 
   
   init_fb();
+
   while(!WindowShouldClose()){
+    if(IsKeyPressed(KEY_R)){
+      Complex cc = str_to_complex(c.input_data);
+      printf("[DEBUG] complex number is %.3f+%.3fi\n", cc.re, cc.im);
+      points = GenerateJuliaSet(cc, (int)s.actual);
+      remap_points(points); // remap points
+    }
+
     BeginDrawing();
       ClearBackground(WHITE);
       DrawSlider(s);
@@ -57,12 +70,18 @@ int main(void){
 
       // Framebuffer area
       DrawRectangleLines(fbLoc.x-1, fbLoc.y-1, WIDTH+2, HEIGHT+2, BLACK);
-      render_fb(fbLoc);
 
+
+      for(int i = 0; i < points; i++){
+        Point r = remappedPoints[i];
+        putpixel(r.x, r.y, 0x000f);
+      }
+      render_fb(fbLoc);
 
       // Data
       int fps = GetFPS();
       DrawText(TextFormat("FPS: %3d", fps), 10, 10, 20, DARKGREEN);
+      DrawText("[DEBUG] Press R to render Julia set!", 10, 40, 20, BLACK);
     EndDrawing();
   }
 
