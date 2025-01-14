@@ -22,14 +22,18 @@ int main(void){
 
   Input c = {
     .counter = 0, .input_area = {.x = 50, .y = 375},
-    .end_area = {.x = 300,.y = c.input_area.y+35}
+    .end_area = {.x = 300,.y = c.input_area.y+35},
+    .max = INP_MAX
   };
 
   Input color = {
     .counter = 0, .input_area = {.x = 50, .y = 275},
-    .end_area = {.x = 300, .y = color.input_area.y+35}
+    .end_area = {.x = 300, .y = color.input_area.y+35},
+    .max = 4 // 16 bit color
   };
 
+  
+  init_fb();
   while(!WindowShouldClose()){
     BeginDrawing();
       ClearBackground(WHITE);
@@ -37,17 +41,25 @@ int main(void){
       Vector2 mouse = GetMousePosition();
       UpdateSlider(&s, mouse);
 
+      // Clamp actual to a int.
+      s.actual = (int)s.actual;
+
       UpdateInputBox(&c); DrawInput(c);
       UpdateInputBox(&color); DrawInput(color);
 
       // Text that tells you what we're doing
       DrawText("Color for points in the set", color.input_area.x-10, color.input_area.y-40, 20, BLACK);
       DrawText("c, for f(z) = z^2 + c", c.input_area.x+15, c.input_area.y-40, 20, BLACK);
-      DrawText(TextFormat("R=%.3f", s.actual), s.pos.x+(s.pos.x/2), s.pos.y-40, 20, BLACK);
+      DrawText(TextFormat("R=%.0f", s.actual), s.pos.x+(s.pos.x/2), s.pos.y-40, 20, BLACK);
 
       // Framebuffer area
-      DrawRectangleLines(fbLoc.x, fbLoc.y, WIDTH, HEIGHT, BLACK);
-      // TODO: framebuffer logic and other stuff.
+      DrawRectangleLines(fbLoc.x-1, fbLoc.y-1, WIDTH+2, HEIGHT+2, BLACK);
+      render_fb(fbLoc);
+
+
+      // Data
+      int fps = GetFPS();
+      DrawText(TextFormat("FPS: %3d", fps), 10, 10, 20, DARKGREEN);
     EndDrawing();
   }
 

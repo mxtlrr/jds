@@ -1,15 +1,20 @@
 #include "fb.h"
 
-uint32_t buffer[307200];
+uint16_t buffer[307200] = {0};
+Texture2D rendered_texture;
 
-Color color_to_raylib(uint32_t c){
-  return (Color){.r = (c>>16) & 0xff,
-    .g = (c>>8) & 0xff, .b = c & 0xff, .a = 255};
-}
-void putpixel(int x, int y, uint32_t color){
-  buffer[x*y] = color;
+void putpixel(int x, int y, uint16_t color) {
+  buffer[y * 640 + x] = color;
 }
 
-void render_fb(Vector2 start){
+void init_fb(){
+  rendered_texture = LoadTextureFromImage((Image){
+    .data = buffer, .width = WIDTH, .height = 480,
+    .mipmaps = 1, .format = PIXELFORMAT_UNCOMPRESSED_R4G4B4A4
+  });
+}
 
+void render_fb(Vector2 start) {
+  UpdateTexture(rendered_texture, buffer);
+  DrawTexture(rendered_texture, start.x, start.y, WHITE);
 }

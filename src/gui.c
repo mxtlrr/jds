@@ -41,7 +41,7 @@ void UpdateInputBox(Input* i){
     if (key != 0) {
       i->input_data[i->counter++] = (char)key;
     }
-    if(i->counter > INP_MAX-1) {
+    if(i->counter > i->max) {
       memset(i->input_data, 0, INP_MAX);
       i->counter = 0;
     }

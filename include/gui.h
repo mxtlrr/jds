@@ -30,6 +30,7 @@ typedef struct Input {
   Vector2 input_area;
   Vector2 end_area;
   int counter;
+  int max;
 } Input;
 
 bool MouseOverInputArea(Vector2 i, Vector2 e);

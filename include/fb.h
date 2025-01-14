@@ -4,16 +4,19 @@
 
 #include <stdint.h>
 #include <raylib.h>
+#include <stdlib.h>
 
 #define WIDTH  640
 #define HEIGHT 480
 
 
 // 640x480
-extern uint32_t buffer[307200];
+extern uint16_t buffer[307200];
+extern Texture2D rendered_texture;
 
-Color color_to_raylib(uint32_t c);
-void putpixel(int x, int y, uint32_t color);
+void putpixel(int x, int y, uint16_t color);
 
 // start is the starting place of the framebuffer
 void render_fb(Vector2 start);
+
+void init_fb();
