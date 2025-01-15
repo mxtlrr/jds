@@ -3,10 +3,30 @@
 
 #include "fb.h"
 #include "gui.h"
+#include "img/ppm.h"
 
+#include "math/julia.h"
 #include "math/complex.h"
 #include "math/parse-input.h"
-#include "math/julia.h"
+
+uint16_t interpolate_palette(uint16_t* palette, int palette_size, double iterations) {
+  int index = (int)iterations % palette_size;
+  int next_index = (index + 1) % palette_size;
+  double t = iterations - (int)iterations;  // Fractional part
+
+  // Interpolate between the two colors
+  uint16_t color1 = palette[index];
+  uint16_t color2 = palette[next_index];
+
+  uint8_t r1 = (color1 >> 8) & 0xF, g1 = (color1 >> 4) & 0xF, b1 = color1 & 0xF;
+  uint8_t r2 = (color2 >> 8) & 0xF, g2 = (color2 >> 4) & 0xF, b2 = color2 & 0xF;
+
+  uint8_t r = (1 - t) * r1 + t * r2;
+  uint8_t g = (1 - t) * g1 + t * g2;
+  uint8_t b = (1 - t) * b1 + t * b2;
+
+  return (r << 8) | (g << 4) | b;
+}
 
 void _(){}
 int main(void){
@@ -58,6 +78,10 @@ int main(void){
       remap_points(points); // remap points
     }
 
+    if(IsKeyDown(KEY_B)) {
+      write_file_to_buf("render.ppm");
+      printf("[DEBUG] outputted image file!\n");
+    }
     BeginDrawing();
       ClearBackground(WHITE);
       DrawSlider(s); DrawSlider(step);
