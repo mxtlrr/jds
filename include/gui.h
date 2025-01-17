@@ -23,6 +23,17 @@ void DrawSlider(Slider s);
 
 /* Buttons */
 
+typedef struct Button {
+  Vector2 xy;
+  Vector2 dim;
+  char text[30];
+  Color clicked_color;
+  Color neutral_color;
+} Button;
+
+void render_button(Button b, Vector2 m);
+bool DidClickButton(Button b, Vector2 m);
+
 /* Input */
 #define INP_MAX 20
 typedef struct Input {

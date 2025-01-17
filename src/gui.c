@@ -52,3 +52,27 @@ void DrawInput(Input i){
   DrawRectangle(i.input_area.x, i.input_area.y, i.end_area.x-i.input_area.x, i.end_area.y-i.input_area.y, GRAY);
   DrawText(i.input_data, i.input_area.x+10, i.input_area.y+((i.end_area.y-i.input_area.y)/3), 20, BLACK);
 }
+
+/* Buttons */
+bool internal_ismousein(Vector2 xy, int w, int h, Vector2 mouse){
+  if(mouse.x >= xy.x && mouse.x <= xy.x + w){
+    if(mouse.y >= xy.y && mouse.y <= xy.y + h){
+      if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) return true;
+    }
+  }
+  return false;
+}
+
+void render_button(Button b, Vector2 m){
+  if(internal_ismousein(b.xy, b.dim.x, b.dim.y, m)){
+    DrawRectangle(b.xy.x, b.xy.y, b.dim.x, b.dim.y, b.clicked_color);
+    DrawText(b.text, b.xy.x+8, b.xy.y+(b.dim.y/4)-2, 20, WHITE);
+  } else {
+    DrawRectangle(b.xy.x, b.xy.y, b.dim.x, b.dim.y, b.neutral_color);
+    DrawText(b.text, b.xy.x+8, b.xy.y+(b.dim.y/4)-2, 20, WHITE);
+  }
+}
+
+bool DidClickButton(Button b, Vector2 m){
+  return internal_ismousein(b.xy, b.dim.x, b.dim.y, m);
+}

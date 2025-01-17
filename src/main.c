@@ -29,56 +29,73 @@ int main(void){
     }
   };
 
-  Slider step = {
-    .min = 0.0f, .max = 250.0f, .pos = {.x = 50, .y = 200 },
-    .div_value = 2500.0f,
-    .Body = {
-      .w = 250.0f, .h = 20, .xPos = step.pos.x, .yPos = step.pos.y-10
-    }
-  };
-
-  Input c = {
+  Input c = { // Complex number
     .counter = 0, .input_area = {.x = 50, .y = 375},
     .end_area = {.x = 300,.y = c.input_area.y+35},
     .max = INP_MAX
   };
 
+  // TODO: implement this
   Input color = {
     .counter = 0, .input_area = {.x = 50, .y = 275},
     .end_area = {.x = 300, .y = color.input_area.y+35},
     .max = 4 // 16 bit color
   };
 
+  Button draw_fb = {
+    .xy = {.x = 120, .y = 550},.dim = {.x = 75, .y = 25},
+    .neutral_color = GRAY, .clicked_color = DARKGRAY, .text = "DRAW"
+  };
+  Button render_ppm = {
+    .xy = {.x = 85, .y = 580},.dim = {.x = 145, .y = 25},
+    .neutral_color = GRAY, .clicked_color = DARKGRAY, .text = "RENDER PPM"
+  };
+  Button render_bmp = {
+    .xy = {.x = render_ppm.xy.x, .y = 610},.dim = {.x = 145, .y = 25},
+    .neutral_color = GRAY, .clicked_color = DARKGRAY, .text = "RENDER BMP"
+  };
+  Button clear_ = {
+    .xy = { .x = 325, .y = 380 }, .dim = {.x=85, .y=25},
+    .neutral_color = GRAY, .clicked_color = DARKGRAY, .text = "RESET"
+  };
   
   init_fb();
   while(!WindowShouldClose()){
-    if(IsKeyPressed(KEY_R)){
+    Vector2 mouse = GetMousePosition();
+
+    if(DidClickButton(draw_fb, mouse)){
       Complex cc = str_to_complex(c.input_data);
       printf("[DEBUG] complex number is %.3f+%.3fi\n", cc.re, cc.im);
-      points = GenerateJuliaSet(cc, determine_R(cc, s.actual)); // TODO: unhardcore R
-      printf("%d points!\n", points);
-      // remap_points(points); // remap points
+      points = GenerateJuliaSet(cc, determine_R(cc, s.actual));
+      printf("%d points\n", points);
     }
 
-    if(IsKeyDown(KEY_B)) {
+    if(DidClickButton(render_ppm, mouse)) {
       write_file_to_buf("render.ppm");
       printf("[DEBUG] outputted image file!\n");
     }
+
+    if(DidClickButton(clear_, mouse)){
+      memset(c.input_data, 0, c.max);
+      c.counter = 0;
+    }
+
     BeginDrawing();
       ClearBackground(WHITE);
-      DrawSlider(s); DrawSlider(step);
-      Vector2 mouse = GetMousePosition();
+      DrawSlider(s);
+
+      // update and draw
       UpdateSlider(&s, mouse);
-      UpdateSlider(&step, mouse);
+      UpdateInputBox(&c); DrawInput(c);
+      UpdateInputBox(&color); DrawInput(color);
+      render_button(draw_fb, mouse); render_button(render_ppm, mouse);
+      render_button(render_bmp, mouse); render_button(clear_, mouse);
 
       // Clamp actual to a int.
       s.actual = (int)s.actual;
 
-      UpdateInputBox(&c); DrawInput(c);
-      UpdateInputBox(&color); DrawInput(color);
 
       // Text that tells you what we're doing
-      DrawText(TextFormat("Step value: %.3f", step.actual), step.pos.x+(step.pos.x)/2, step.pos.y-40, 20, BLACK);
       DrawText("Color for points in the set", color.input_area.x-10, color.input_area.y-40, 20, BLACK);
       DrawText("c, for f(z) = z^2 + c", c.input_area.x+15, c.input_area.y-40, 20, BLACK);
       DrawText(TextFormat("Accuracy multiplier: %.0f", s.actual), s.pos.x+(s.pos.x/2), s.pos.y-40, 20, BLACK);
@@ -96,9 +113,7 @@ int main(void){
       // Data
       int fps = GetFPS();
       DrawText(TextFormat("FPS: %3d", fps), 10, 10, 20, DARKGREEN);
-      DrawText("[DEBUG] Press R to render Julia set!", 10, 40, 20, BLACK);
-      DrawText("[DEBUG] Press E to clear framebuffer", 10, 60, 20, BLACK);
-      
+
     EndDrawing();
   }
 
