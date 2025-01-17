@@ -74,8 +74,9 @@ int main(void){
     if(IsKeyPressed(KEY_R)){
       Complex cc = str_to_complex(c.input_data);
       printf("[DEBUG] complex number is %.3f+%.3fi\n", cc.re, cc.im);
-      points = GenerateJuliaSet(cc, (int)s.actual, step.actual);
-      remap_points(points); // remap points
+      points = GenerateJuliaSet(cc, 1.57); // TODO: unhardcore R
+      printf("%d points!\n", points);
+      // remap_points(points); // remap points
     }
 
     if(IsKeyDown(KEY_B)) {
@@ -106,8 +107,8 @@ int main(void){
 
 
       for(int i = 0; i < points; i++){
-        Point r = remappedPoints[i];
-        putpixel(r.x, r.y, palette[JuliaSet[i].iterations]);
+        Result r = JuliaSet[i]; Point p = r.location;
+        putpixel(p.x, p.y, palette[JuliaSet[i].iterations]);
       }
       render_fb(fbLoc);
 

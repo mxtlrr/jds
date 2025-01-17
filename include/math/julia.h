@@ -4,32 +4,36 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "fb.h"
 #include "complex.h"
 
+#define JULIA_SET_SIZE 10000000
+#define MAX_ITERATIONS 16
+
 extern uint16_t palette[16];
-typedef struct Result {
-  bool stays_in; // Does it stay bounded?
-  int iterations; // If stays_in = false, then this is the amount
-                  // of iterations before it runs off.
-  Complex c;      // The point itself
-} Result;
 
 typedef struct Point {
-  int x;
-  int y;
+  float x;
+  float y;
 } Point;
 
+double scale_coord(int p, int sd, double min, double max);
+// Result does_point_escape(Complex z, Complex seed, int R);
 
-Result does_point_escape(Complex z, Complex seed, int R);
+int pixel(Point a, Complex c, int R);
 
-extern Result JuliaSet[300000];
-extern Point remappedPoints[300000];
+
+typedef struct Result {
+  Point location;
+  int iterations;
+} Result;
+
+extern Result JuliaSet[JULIA_SET_SIZE];
+// extern Point remappedPoints[JULIA_SET_SIZE];
 
 
 #define STEP 0.1
-
-// From (-10, -10) to (10, 10)
-int GenerateJuliaSet(Complex seed, int R, float step);
+int GenerateJuliaSet(Complex seed, int R);
 
 // Map points in julia set to available points on the framebuffer
 // Example:
