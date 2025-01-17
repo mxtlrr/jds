@@ -9,25 +9,6 @@
 #include "math/complex.h"
 #include "math/parse-input.h"
 
-uint16_t interpolate_palette(uint16_t* palette, int palette_size, double iterations) {
-  int index = (int)iterations % palette_size;
-  int next_index = (index + 1) % palette_size;
-  double t = iterations - (int)iterations;  // Fractional part
-
-  // Interpolate between the two colors
-  uint16_t color1 = palette[index];
-  uint16_t color2 = palette[next_index];
-
-  uint8_t r1 = (color1 >> 8) & 0xF, g1 = (color1 >> 4) & 0xF, b1 = color1 & 0xF;
-  uint8_t r2 = (color2 >> 8) & 0xF, g2 = (color2 >> 4) & 0xF, b2 = color2 & 0xF;
-
-  uint8_t r = (1 - t) * r1 + t * r2;
-  uint8_t g = (1 - t) * g1 + t * g2;
-  uint8_t b = (1 - t) * b1 + t * b2;
-
-  return (r << 8) | (g << 4) | b;
-}
-
 void _(){}
 int main(void){
   int points = 0;
@@ -74,7 +55,7 @@ int main(void){
     if(IsKeyPressed(KEY_R)){
       Complex cc = str_to_complex(c.input_data);
       printf("[DEBUG] complex number is %.3f+%.3fi\n", cc.re, cc.im);
-      points = GenerateJuliaSet(cc, 1.57); // TODO: unhardcore R
+      points = GenerateJuliaSet(cc, determine_R(cc, s.actual)); // TODO: unhardcore R
       printf("%d points!\n", points);
       // remap_points(points); // remap points
     }
@@ -100,7 +81,7 @@ int main(void){
       DrawText(TextFormat("Step value: %.3f", step.actual), step.pos.x+(step.pos.x)/2, step.pos.y-40, 20, BLACK);
       DrawText("Color for points in the set", color.input_area.x-10, color.input_area.y-40, 20, BLACK);
       DrawText("c, for f(z) = z^2 + c", c.input_area.x+15, c.input_area.y-40, 20, BLACK);
-      DrawText(TextFormat("R=%.0f", s.actual), s.pos.x+(s.pos.x/2), s.pos.y-40, 20, BLACK);
+      DrawText(TextFormat("Accuracy multiplier: %.0f", s.actual), s.pos.x+(s.pos.x/2), s.pos.y-40, 20, BLACK);
 
       // Framebuffer area
       DrawRectangleLines(fbLoc.x-1, fbLoc.y-1, WIDTH+2, HEIGHT+2, BLACK);

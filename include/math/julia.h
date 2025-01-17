@@ -29,14 +29,10 @@ typedef struct Result {
 } Result;
 
 extern Result JuliaSet[JULIA_SET_SIZE];
-// extern Point remappedPoints[JULIA_SET_SIZE];
-
 
 #define STEP 0.1
 int GenerateJuliaSet(Complex seed, int R);
 
-// Map points in julia set to available points on the framebuffer
-// Example:
-// Origin is (320, 240) for 640x480 fb
-// -0.4 + 0.9i ==[ x10 ]==> (-4,9) ==[ map through origin ]==> (316, 249)
-void remap_points();
+// This function determines a possible R. The higher the R, the more accurate
+// the julia set is. It's pretty much a quadratic
+float determine_R(Complex c, int accuracy);
