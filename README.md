@@ -10,8 +10,8 @@ TODO
 TODO
 
 ## Screenshot
-![](./img/13Jan2025-JDS.png)
-*JDS rendering $f_c(z) = z^2 + 0.4+0.4i$ with an escape value of $10$*
+![](./img/17Jan2025-JDS.png)
+*JDS rendering* $f_c(z) = z^2 + 0.4+0.4i$ *with an escape value of* $10$
 
 # What's a Julia Set?
 The Julia set, $J$, is defined from a function $f_c$. Values in this set are known
@@ -43,9 +43,14 @@ It's a very simple algorithm:
 TODO
 
 # Planned Features
-- [ ] Exporting to JPG, PNG, PPM
-- [ ] Custom colors for rendering
-- [ ] Customizing parameters:
-  - [ ] Escape distance
-  - [ ] $c$
+- [ ] Exporting to image formats
+  - [X] PPM
+  - [ ] BMP
+  - [ ] JPEG
+- [ ] Coloring
+  - [ ] Smooth coloring (checkbox?)
+  - [X] "discrete" coloring (non-smooth / non-continous)
+- [X] Customizing parameters:
+  - [X] Accuracy radius
+  - [X] $c$
 - [ ] Zooming in/out
