@@ -12,3 +12,4 @@
 #define MAX_PRECISION 5
 
 Complex str_to_complex(char* str);
+int countChars(char* s, char b);
