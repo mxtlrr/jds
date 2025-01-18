@@ -32,7 +32,7 @@ int pixel(Point a, Complex c, int R){
 Result JuliaSet[JULIA_SET_SIZE];
 int GenerateJuliaSet(Complex seed, int R){
   int counter = 0;
-  for(int y = 0; y < HEIGHT; y++){
+  for(int y = 0; y < HEIGHT+20; y++){ // height+20 here to map on entire fb
     for(int x = 0; x < WIDTH; x++){
       int pc = pixel((Point){x,y}, seed, R);
       JuliaSet[counter] = (Result){
@@ -62,4 +62,19 @@ float determine_R(Complex c, int accuracy){
   // The correct value is technically a good R, we can just 
   // mulitply it by accuracy and return that.
   return correct*accuracy;
+}
+
+void remap_points(int point_count, float R){
+  for(int i = 0; i < point_count; i++){
+    // fill full fb
+    if(JuliaSet[i].location.y - 20 < 0);
+    else JuliaSet[i].location.y -= 20; 
+
+    // s.actual <=> R
+    if(R > 3){
+      // Scale it up by (s.actual)-1.
+      JuliaSet[i].location.x *= (R-1);
+      JuliaSet[i].location.y *= (R-1);
+    }
+  }
 }

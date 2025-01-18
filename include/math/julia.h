@@ -36,3 +36,6 @@ int GenerateJuliaSet(Complex seed, int R);
 // This function determines a possible R. The higher the R, the more accurate
 // the julia set is. It's pretty much a quadratic
 float determine_R(Complex c, int accuracy);
+
+// remaps the points to actually not shrink when accuracy increases.
+void remap_points(int point_count, float R);

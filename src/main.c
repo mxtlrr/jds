@@ -65,9 +65,11 @@ int main(void){
 
     if(DidClickButton(draw_fb, mouse)){
       Complex cc = str_to_complex(c.input_data);
-      printf("[DEBUG] complex number is %.3f+%.3fi\n", cc.re, cc.im);
-      points = GenerateJuliaSet(cc, determine_R(cc, s.actual));
-      printf("%d points\n", points);
+      float R = determine_R(cc, s.actual);
+//      printf("[DEBUG] complex number is %.3f+%.3fi\n", cc.re, cc.im);
+      points = GenerateJuliaSet(cc, R);
+//      printf("%d points\n", points);
+      remap_points(points, R);
     }
 
     if(DidClickButton(render_ppm, mouse)) {
@@ -106,7 +108,9 @@ int main(void){
 
       for(int i = 0; i < points; i++){
         Result r = JuliaSet[i]; Point p = r.location;
-        putpixel(p.x, p.y, palette[JuliaSet[i].iterations]);
+ //       printf("%.3f, %.3f || %d\n", p.x, p.y, JuliaSet[i].iterations);
+        if(p.x > WIDTH || p.y > HEIGHT);
+        else putpixel(p.x, p.y, palette[JuliaSet[i].iterations]);
       }
       render_fb(fbLoc);
 
