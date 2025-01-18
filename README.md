@@ -11,7 +11,7 @@ TODO
 
 ## Screenshot
 ![](./img/17Jan2025-JDS.png)
-*JDS rendering* $f_c(z) = z^2 + 0.4+0.4i$ *with an escape value of* $10$
+*JDS rendering* $f_c(z) = z^2 + 0.4+0.4i$ *with an escape value of approximately* $2\cdot 1.54$.
 
 # What's a Julia Set?
 The Julia set, $J$, is defined from a function $f_c$. Values in this set are known

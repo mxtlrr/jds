@@ -1,5 +1,5 @@
 CC     := gcc
-LDFLAGS := -lraylib
+LDFLAGS := -lraylib -lm
 
 ifeq ($(OS),Windows_NT)
 	LDFLAGS += -lgdi32 -lwinmm
