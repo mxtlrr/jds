@@ -7,7 +7,49 @@ Julia Set viewer written in C. Cross-platform for both Linux and Windows. No ext
 TODO
 
 ## Using JDS
-TODO
+*Not everything is listed here! Most things are self-explanatory!*
+
+### Color data to change palette
+This can either be
+- 'r'
+- 'g', or
+- 'b'
+
+This changes the main color palette. Selecting 'r' will make every non-black color
+a shade of red. Same goes for green and blue. Default with no input is blue.
+
+### Accuracy multiplier
+The accuracy multiplier just increases the $R$ value when computing the Julia
+set. As far as I can tell, this improves accuracy when zooming in / needing more
+precision, which is why it's a slider.
+
+The higher this value is, the more accurate. If you don't want to zoom in but
+want to see pretty fractals, set this slider to 2.
+
+### Complex number
+This is just any complex number $a+bi$ such that $a \neq 0$ and the precision of
+both $a$ and $b$ must be at most 5 digits. Meaning $0.23154+1.23914i$ is perfectly
+valid, but any more frsactional digits to either would be invalid.
+
+Additionally, there's some other stuff that hasn't been implemented for complex
+numbers:
+- Exponential parts (i.e. $0.7885e^{i\cdot 2\pi}$.
+- Parsing of complex numbers where $b = 0$.
+
+Everything else, like negative parts, only the imaginary parts have been
+implemented.
+
+#### The "RESET" button
+This just resets both the color data input box and the complex number textbox.
+
+### Rendering
+Currently JDS supports only rendering to [PPM](https://en.wikipedia.org/wiki/Netpbm). Eventually, I'll implement BMP and JPEG/PNG. Until then, you're able to use
+ffmpeg to convert from ppm to png, i.e.
+
+```
+ffmpeg -i render.ppm render.png
+```
+
 
 ## Screenshot
 ![](./img/17Jan2025-JDS.png)
