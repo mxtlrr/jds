@@ -20,6 +20,5 @@ color_t rgba2color(uint16_t c){
 
 void generate_palette(uint16_t initial_value, int p, uint16_t* dest){
   double value = 4096 * pow(2,-4*p); // cursed.
- // dest[0] = initial_value;
   for(int i=0; i<16; i++) dest[i] = initial_value + (value*i);
 }

@@ -7,20 +7,18 @@ double scale_coord(int p, int sd, double min, double max) {
 }
 
 int pixel(Point a, Complex c, int R){
-  double zx = scale_coord(a.x, WIDTH, -R, R);
-  double zy = scale_coord(a.y, HEIGHT, -R, R);
+  float zx = (a.x)/(WIDTH-1)*2*zoom-zoom+zoomXY.re;
+  float zy = (a.y)/(WIDTH-1)*2*zoom-zoom+zoomXY.im;
 
   int i = 0;
-  while(zx*zx + zy*zy < pow(R,2) && i<MAX_ITERATIONS){
+  while(zx*zx + zy*zy < (R*R) && i<MAX_ITERATIONS){
     double xtemp = zx*zx - zy*zy;
     zy = 2*zx*zy+c.im;
     zx = xtemp + c.re;
-
     i++;
   }
 
-  if(i == MAX_ITERATIONS) return 0;
-  else return i;
+  return (i == MAX_ITERATIONS) ? 0 : i;
 }
 
 
@@ -59,17 +57,17 @@ float determine_R(Complex c, int accuracy){
   return correct*accuracy;
 }
 
-void remap_points(int point_count, float R){
-  for(int i = 0; i < point_count; i++){
-    // fill full fb
-    if(JuliaSet[i].location.y - 20 < 0);
-    else JuliaSet[i].location.y -= 20; 
 
-    // s.actual <=> R
-    if(R > 3){
-      // Scale it up by (s.actual)-1.
-      JuliaSet[i].location.x *= (R-1);
-      JuliaSet[i].location.y *= (R-1);
-    }
-  }
+/** ZOOM */
+
+double zoom = 1;
+Complex zoomXY = {0,0};
+void zoomIn(double zoomFactor, float R, Complex c){
+  zoom *= zoomFactor;
+  GenerateJuliaSet(c,R);
+  // framebuffer should be updated after this.
+}
+
+void setZoomXY(Complex new){
+  zoomXY = new;
 }

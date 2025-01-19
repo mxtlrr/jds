@@ -12,10 +12,10 @@
 
 void _(){}
 int main(void){
-  generate_palette(0x000f, CHANGE_R, palette);
-  for(int i = 0; i < 16; i++){
-    printf("Palette color %2d == %4x\n", i, palette[i]);
-  }
+  /* Before we start rendering, let's initialize:
+   * palette, zoom, center zoom */
+  generate_palette(0x000f, CHANGE_R, palette); // Set palette
+  setZoomXY((Complex){0,0});                   // Zoom into the origin.
   int points = 0;
 
   SetTraceLogCallback(_);
@@ -67,6 +67,13 @@ int main(void){
   while(!WindowShouldClose()){
     Vector2 mouse = GetMousePosition();
 
+    if(IsKeyDown(KEY_B)){
+      Complex cc = str_to_complex(c.input_data);
+      float R = determine_R(cc, s.actual);
+
+      zoomIn(zoom, R, cc);
+    }
+
     if(DidClickButton(draw_fb, mouse)){
       // Create the palette from the set thing
       char value = color.input_data[0];
@@ -89,7 +96,6 @@ int main(void){
       Complex cc = str_to_complex(c.input_data);
       float R = determine_R(cc, s.actual);
       points = GenerateJuliaSet(cc, R);
-      remap_points(points, R);
     }
 
     if(DidClickButton(render_ppm, mouse)) {
