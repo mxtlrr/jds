@@ -5,12 +5,17 @@
 #include "gui.h"
 #include "img/ppm.h"
 
+#include "palette.h"
 #include "math/julia.h"
 #include "math/complex.h"
 #include "math/parse-input.h"
 
 void _(){}
 int main(void){
+  generate_palette(0x000f, CHANGE_R, palette);
+  for(int i = 0; i < 16; i++){
+    printf("Palette color %2d == %4x\n", i, palette[i]);
+  }
   int points = 0;
 
   SetTraceLogCallback(_);
@@ -35,11 +40,10 @@ int main(void){
     .max = INP_MAX
   };
 
-  // TODO: implement this
   Input color = {
     .counter = 0, .input_area = {.x = 50, .y = 275},
     .end_area = {.x = 300, .y = color.input_area.y+35},
-    .max = 4 // 16 bit color
+    .max = 1
   };
 
   Button draw_fb = {
@@ -64,11 +68,27 @@ int main(void){
     Vector2 mouse = GetMousePosition();
 
     if(DidClickButton(draw_fb, mouse)){
+      // Create the palette from the set thing
+      char value = color.input_data[0];
+      // TODO: check if this is uppercase or lowercase
+      if(value != 0){
+        // Determine what to change
+        uint8_t nv = 0;
+        if(value == 'r') nv = CHANGE_R;
+        if(value == 'g') nv = CHANGE_G;
+        if(value == 'b') nv = CHANGE_B;
+       
+        printf("nv=%d | val=%d\n", nv, value);
+        // Now change the palette
+        generate_palette(0xf, nv, palette);
+      } else {
+        printf("No value given!\n");
+        generate_palette(0xf, 2, palette); // Let's do blue:)
+      }
+      // Generate the julia set
       Complex cc = str_to_complex(c.input_data);
       float R = determine_R(cc, s.actual);
-//      printf("[DEBUG] complex number is %.3f+%.3fi\n", cc.re, cc.im);
       points = GenerateJuliaSet(cc, R);
-//      printf("%d points\n", points);
       remap_points(points, R);
     }
 
@@ -78,8 +98,8 @@ int main(void){
     }
 
     if(DidClickButton(clear_, mouse)){
-      memset(c.input_data, 0, c.max);
-      c.counter = 0;
+      memset(c.input_data, 0, c.max); c.counter = 0;
+      memset(color.input_data, 0, 3); color.counter = 0;
     }
 
     BeginDrawing();
@@ -98,7 +118,7 @@ int main(void){
 
 
       // Text that tells you what we're doing
-      DrawText("Color for points in the set", color.input_area.x-10, color.input_area.y-40, 20, BLACK);
+      DrawText("Which pixel data to change?", color.input_area.x-10, color.input_area.y-40, 20, BLACK);
       DrawText("c, for f(z) = z^2 + c", c.input_area.x+15, c.input_area.y-40, 20, BLACK);
       DrawText(TextFormat("Accuracy multiplier: %.0f", s.actual), s.pos.x+(s.pos.x/2), s.pos.y-40, 20, BLACK);
 
