@@ -62,7 +62,7 @@ float determine_R(Complex c, int accuracy){
 
 /** ZOOM */
 
-double zoom = 1;
+double zoom = 2;
 Complex zoomXY = {0,0};
 void zoomIn(double zoomFactor, float R, Complex c){
   zoom *= zoomFactor;

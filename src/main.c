@@ -20,7 +20,7 @@ int main(void){
 
   SetTraceLogCallback(_);
   InitWindow(1200, 768, TextFormat("JDS git-%s", VERSION));
-  SetTargetFPS(60);
+//SetTargetFPS(60);
 
   Vector2 fbLoc = (Vector2){500, 200};
 
@@ -67,11 +67,16 @@ int main(void){
   while(!WindowShouldClose()){
     Vector2 mouse = GetMousePosition();
 
-    if(IsKeyDown(KEY_B)){
+    if(IsMouseOverFb(mouse, fbLoc)){
+      Vector2 loc = getMousePosInFB(mouse, fbLoc);
+      printf("(%.3f, %.3f)\n", loc.x, loc.y);
+    }
+    if(IsKeyDown(KEY_Z)){
+      printf("[DEBUG][OK] Zooming into %.3f+%.3fi\n", zoomXY.re, zoomXY.im);
       Complex cc = str_to_complex(c.input_data);
       float R = determine_R(cc, s.actual);
-
-      zoomIn(zoom, R, cc);
+      zoomIn(ZOOM_FACTOR, R, cc);
+      printf("[DEBUG] zoom factor: %.3f. new zoom: %.3f\n", ZOOM_FACTOR, zoom);
     }
 
     if(DidClickButton(draw_fb, mouse)){

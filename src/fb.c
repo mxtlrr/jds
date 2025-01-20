@@ -18,3 +18,18 @@ void render_fb(Vector2 start) {
   UpdateTexture(rendered_texture, buffer);
   DrawTexture(rendered_texture, start.x, start.y, WHITE);
 }
+
+bool IsMouseOverFb(Vector2 m, Vector2 sPos){
+  // ill use this to generate actual complex numbers to
+  // zoom in.
+  if(sPos.x <= m.x && sPos.x+WIDTH >= m.x &&
+      sPos.y <= m.y && sPos.y+HEIGHT >= m.y) return true;
+  return false;
+}
+
+Vector2 getMousePosInFB(Vector2 m, Vector2 sPos){
+  return (Vector2){
+    .x = m.x - sPos.x,
+    .y = m.y - sPos.y
+  };
+}
