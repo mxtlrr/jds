@@ -134,8 +134,9 @@ int main(void){
 
       for(int i = 0; i < points; i++){
         Result r = JuliaSet[i]; Point p = r.location;
- //       printf("%.3f, %.3f || %d\n", p.x, p.y, JuliaSet[i].iterations);
-        if(p.x > WIDTH || p.y > HEIGHT);
+        if(p.x > WIDTH || p.y > HEIGHT){
+          printf("[DEBUG] Pixel at (%.3f,%.3f) is out of bounds!\n", p.x,p.y);
+        }
         else putpixel(p.x, p.y, palette[JuliaSet[i].iterations]);
       }
       render_fb(fbLoc);

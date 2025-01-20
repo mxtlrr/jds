@@ -25,7 +25,9 @@ int pixel(Point a, Complex c, int R){
 Result JuliaSet[JULIA_SET_SIZE];
 int GenerateJuliaSet(Complex seed, int R){
   int counter = 0;
-  for(int y = 0; y < HEIGHT+20; y++){ // height+20 here to map on entire fb
+  // Dont map it because it will try and access pixels that do not exist.
+  // y must be between (x, 0) and (x, HEIGHT).
+  for(int y = 0; y < HEIGHT; y++){
     for(int x = 0; x < WIDTH; x++){
       int pc = pixel((Point){x,y}, seed, R);
       JuliaSet[counter] = (Result){
