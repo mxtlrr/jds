@@ -64,3 +64,8 @@ void zoomIn(double zoomFactor, float R, Complex c);
 
 // Set the center to where we zoom into
 void setZoomXY(Complex new);
+
+// Remap positions from an actual point on the framebuffer
+// to a point in the complex plain. Also used in
+// generating Julia set
+Complex FBPixelToComplex(Point p);

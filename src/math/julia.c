@@ -8,7 +8,7 @@ double scale_coord(int p, int sd, double min, double max) {
 
 int pixel(Point a, Complex c, int R){
   float zx = (a.x)/(WIDTH-1)*2*zoom-zoom+zoomXY.re;
-  float zy = (a.y)/(WIDTH-1)*2*zoom-zoom+zoomXY.im;
+  float zy = (a.y)/(HEIGHT-1)*2*zoom-zoom+zoomXY.im;
 
   int i = 0;
   while(zx*zx + zy*zy < (R*R) && i<MAX_ITERATIONS){
@@ -57,6 +57,13 @@ float determine_R(Complex c, int accuracy){
   // The correct value is technically a good R, we can just 
   // mulitply it by accuracy and return that.
   return correct*accuracy;
+}
+
+Complex FBPixelToComplex(Point p){
+  return (Complex){
+    .re = (p.x)/(WIDTH-1)*2*zoom-zoom+zoomXY.re,
+    .im = (p.y)/(HEIGHT-1)*2*zoom-zoom+zoomXY.im
+  };
 }
 
 
