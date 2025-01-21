@@ -33,6 +33,7 @@ typedef struct Button {
 
 void render_button(Button b, Vector2 m);
 bool DidClickButton(Button b, Vector2 m);
+bool DidHoldButton(Button b, Vector2 m);
 
 /* Input */
 #define INP_MAX 20

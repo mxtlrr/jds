@@ -62,21 +62,31 @@ int main(void){
     .xy = { .x = 325, .y = 380 }, .dim = {.x=85, .y=25},
     .neutral_color = GRAY, .clicked_color = DARKGRAY, .text = "RESET"
   };
+
+  Button zoomInB = { .xy = { .x = (fbLoc.x+WIDTH)-100, .y = (fbLoc.y+HEIGHT)+15 },
+  .dim = {.x = 35, .y = 30}, .neutral_color = BLACK, .clicked_color = DARKGRAY, .text = "IN" };
   
-  init_fb();
+   Button zoomOutB = { .xy = { .x = (fbLoc.x+WIDTH)-60, .y = (fbLoc.y+HEIGHT)+15 },
+  .dim = {.x = 55, .y = 30}, .neutral_color = BLACK, .clicked_color = DARKGRAY, .text = "OUT" };
+  
+  init_fb(); Vector2 mouseInFb;
   while(!WindowShouldClose()){
     Vector2 mouse = GetMousePosition();
 
-    if(IsMouseOverFb(mouse, fbLoc)){
-      Vector2 loc = getMousePosInFB(mouse, fbLoc);
-      printf("(%.3f, %.3f)\n", loc.x, loc.y);
-    }
-    if(IsKeyDown(KEY_Z)){
-      printf("[DEBUG][OK] Zooming into %.3f+%.3fi\n", zoomXY.re, zoomXY.im);
+    if(IsMouseOverFb(mouse, fbLoc))
+      mouseInFb = getMousePosInFB(mouse, fbLoc); // TODO: do something | somehow change this
+                                                 // to generate complex coordinates from where the user
+                                                 // has put their cursor on the framebuffer.
+
+    if(DidHoldButton(zoomInB, mouse)){
       Complex cc = str_to_complex(c.input_data);
       float R = determine_R(cc, s.actual);
-      zoomIn(ZOOM_FACTOR, R, cc);
-      printf("[DEBUG] zoom factor: %.3f. new zoom: %.3f\n", ZOOM_FACTOR, zoom);
+      zoomIn(ZOOMIN_FACTOR, R, cc);
+    }
+    if(DidHoldButton(zoomOutB, mouse)){
+      Complex cc = str_to_complex(c.input_data);
+      float R = determine_R(cc, s.actual);
+      zoomIn(ZOOMOUT_FACTOR, R, cc);
     }
 
     if(DidClickButton(draw_fb, mouse)){
@@ -121,8 +131,8 @@ int main(void){
       UpdateSlider(&s, mouse);
       UpdateInputBox(&c); DrawInput(c);
       UpdateInputBox(&color); DrawInput(color);
-      render_button(draw_fb, mouse); render_button(render_ppm, mouse);
-      render_button(render_bmp, mouse); render_button(clear_, mouse);
+      render_button(draw_fb, mouse); render_button(render_ppm, mouse); render_button(zoomOutB, mouse);
+      render_button(render_bmp, mouse); render_button(clear_, mouse); render_button(zoomInB, mouse);
 
       // Clamp actual to a int.
       s.actual = (int)s.actual;
@@ -132,6 +142,9 @@ int main(void){
       DrawText("Which pixel data to change?", color.input_area.x-10, color.input_area.y-40, 20, BLACK);
       DrawText("c, for f(z) = z^2 + c", c.input_area.x+15, c.input_area.y-40, 20, BLACK);
       DrawText(TextFormat("Accuracy multiplier: %.0f", s.actual), s.pos.x+(s.pos.x/2), s.pos.y-40, 20, BLACK);
+
+      DrawText(TextFormat("(%.0f, %.0f)", mouseInFb.x, mouseInFb.y), fbLoc.x+5, fbLoc.y-25, 20, BLACK);
+      DrawText(TextFormat("Zoom: %.6f", zoom), fbLoc.x+10, zoomInB.xy.y, 20, BLACK);
 
       // Framebuffer area
       DrawRectangleLines(fbLoc.x-1, fbLoc.y-1, WIDTH+2, HEIGHT+2, BLACK);

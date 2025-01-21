@@ -24,7 +24,10 @@ typedef struct Result {
 
 extern Result JuliaSet[JULIA_SET_SIZE];
 
-#define ZOOM_FACTOR 0.95
+#define ZOOM_FACTOR         0.05
+#define MAKE_ZOOM_FACTOR(x) (1-x)
+#define ZOOMIN_FACTOR       MAKE_ZOOM_FACTOR(ZOOM_FACTOR)
+#define ZOOMOUT_FACTOR      1+ZOOM_FACTOR
 
 extern double zoom;     // Zoom amount
 extern Complex zoomXY;  // Center to zoom into

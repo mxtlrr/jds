@@ -57,7 +57,7 @@ void DrawInput(Input i){
 bool internal_ismousein(Vector2 xy, int w, int h, Vector2 mouse){
   if(mouse.x >= xy.x && mouse.x <= xy.x + w){
     if(mouse.y >= xy.y && mouse.y <= xy.y + h){
-      if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) return true;
+      return true;
     }
   }
   return false;
@@ -74,5 +74,11 @@ void render_button(Button b, Vector2 m){
 }
 
 bool DidClickButton(Button b, Vector2 m){
-  return internal_ismousein(b.xy, b.dim.x, b.dim.y, m);
+  return (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) && internal_ismousein(b.xy, b.dim.x, b.dim.y, m);
+}
+
+
+bool DidHoldButton(Button b, Vector2 m){
+  return (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) &&
+      internal_ismousein(b.xy, b.dim.x, b.dim.y, m);
 }
