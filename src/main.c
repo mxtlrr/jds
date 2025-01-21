@@ -6,6 +6,7 @@
 #include "img/ppm.h"
 
 #include "palette.h"
+#include "fpsgraph.h"
 #include "math/julia.h"
 #include "math/complex.h"
 #include "math/parse-input.h"
@@ -21,7 +22,7 @@ int main(void){
 
   SetTraceLogCallback(_);
   InitWindow(1200, 768, TextFormat("JDS git-%s", VERSION));
-//SetTargetFPS(60);
+  SetTargetFPS(240);
 
   Vector2 fbLoc = (Vector2){500, 200};
 
@@ -165,6 +166,9 @@ int main(void){
         else putpixel(p.x, p.y, palette[JuliaSet[i].iterations]);
       }
       render_fb(fbLoc);
+
+      update_FPSGraph();
+      RenderFPSGraph((Vector2){200, 10});
 
       // Data
       int fps = GetFPS();
