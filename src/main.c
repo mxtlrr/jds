@@ -28,24 +28,15 @@ int main(void){
 
   /* GUI components */
   Slider s = { // Escape value
-    .min = 0.0f, .max = 250.0f, .pos = {.x = 50, .y = 500},
-    .div_value = 15,
-    .Body = {
-      .w = s.max, .h = 20, .xPos = s.pos.x, .yPos = s.pos.y-10
-    }
-  };
+    .min = 0.0f, .max = 250.0f, .pos = {.x = 50, .y = 500}, .div_value = 15, .actual = 0,
+    .Body = { .w = s.max, .h = 20, .xPos = s.pos.x, .yPos = s.pos.y-10 } };
 
   Input c = { // Complex number
-    .counter = 0, .input_area = {.x = 50, .y = 375},
-    .end_area = {.x = 300,.y = c.input_area.y+35},
-    .max = INP_MAX
-  };
+    .counter = 0, .input_area = {.x = 50, .y = 375}, .end_area = {.x = 300,.y = c.input_area.y+35},
+    .max = INP_MAX };
 
-  Input color = {
-    .counter = 0, .input_area = {.x = 50, .y = 275},
-    .end_area = {.x = 300, .y = color.input_area.y+35},
-    .max = 1
-  };
+  Input color = { .counter = 0, .input_area = {.x = 50, .y = 275},
+    .end_area = {.x = 300, .y = color.input_area.y+35}, .max = 1 };
 
   Button draw_fb = { .xy = {.x = 120, .y = 550},.dim = {.x = 75, .y = 25},
     .neutral_color = GRAY, .clicked_color = DARKGRAY, .text = "DRAW" };
@@ -68,38 +59,47 @@ int main(void){
   
   Button resetZoom = { .xy = { .x = (fbLoc.x+(WIDTH/2)), .y = zoomInB.xy.y }, .dim = { .x = 85, 30 },
     .neutral_color = BLACK, .clicked_color = DARKGRAY, .text = "RESET" };
-  init_fb(); Vector2 mouseInFb; Complex xc = zoomXY;
+
+
+  init_fb(); 
+  Vector2 mouseInFb;
+  Complex xc = zoomXY;
+  
+  Complex cc = {0,0};
+  float R = 0.0f;
   while(!WindowShouldClose()){
     Vector2 mouse = GetMousePosition();
+    
+    // Update complex number and R (escape radius)
+    if(c.input_data[0] != 0 && (strcmp(c.input_data, "") != 0)){
+      cc = str_to_complex(c.input_data);
+      R = determine_R(cc, s.actual);
+      //printf("Complex: %.3f, %.3fi | R=%.8f\n", cc.re, cc.im, R);
+    }
 
     if(IsMouseOverFb(mouse, fbLoc)){
       mouseInFb = getMousePosInFB(mouse, fbLoc);
       if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+        // Convert the current pixel on the screen to a complex number and zoom
         xc = FBPixelToComplex((Point){mouseInFb.x, mouseInFb.y});
         setZoomXY(xc);
-        zoomIn(1, determine_R(str_to_complex(c.input_data), s.actual), str_to_complex(c.input_data)); // ew
+
+        // Set viewport centering on that point.
+        zoomIn(1, R, cc);
       }
     }
 
     if(DidClickButton(resetZoom, mouse)){
-      Complex cc = str_to_complex(c.input_data);
-      float R = determine_R(cc, s.actual);
       setZoomXY((Complex){0.072, -0.039});
       xc = zoomXY;
       zoom = 2.0f;
       GenerateJuliaSet(cc, R);
     }
 
-    if(DidHoldButton(zoomInB, mouse)){
-      Complex cc = str_to_complex(c.input_data);
-      float R = determine_R(cc, s.actual);
-      zoomIn(ZOOMIN_FACTOR, R, cc);
-    }
-    if(DidHoldButton(zoomOutB, mouse)){
-      Complex cc = str_to_complex(c.input_data);
-      float R = determine_R(cc, s.actual);
-      zoomIn(ZOOMOUT_FACTOR, R, cc);
-    }
+    // Zoom in / out
+    if(DidHoldButton(zoomInB, mouse))  zoomIn(ZOOMIN_FACTOR,  R, cc);
+    if(DidHoldButton(zoomOutB, mouse)) zoomIn(ZOOMOUT_FACTOR, R, cc);
+    
 
     if(DidClickButton(draw_fb, mouse)){
       // Create the palette from the set thing
@@ -111,17 +111,9 @@ int main(void){
         if(value == 'r') nv = CHANGE_R;
         if(value == 'g') nv = CHANGE_G;
         if(value == 'b') nv = CHANGE_B;
-       
-        printf("nv=%d | val=%d\n", nv, value);
-        // Now change the palette
         generate_palette(0xf, nv, palette);
-      } else {
-        printf("No value given!\n");
-        generate_palette(0xf, 2, palette); // Let's do blue:)
-      }
+      } else generate_palette(0xf, 2, palette); // Let's do blue:)
       // Generate the julia set
-      Complex cc = str_to_complex(c.input_data);
-      float R = determine_R(cc, s.actual);
       points = GenerateJuliaSet(cc, R);
     }
 
