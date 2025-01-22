@@ -3,6 +3,7 @@
 
 #include "fb.h"
 #include "gui.h"
+#include "img/bmp.h"
 #include "img/ppm.h"
 
 #include "palette.h"
@@ -22,7 +23,7 @@ int main(void){
 
   SetTraceLogCallback(_);
   InitWindow(1200, 768, TextFormat("JDS git-%s", VERSION));
-  SetTargetFPS(240);
+  SetTargetFPS(120);
 
   Vector2 fbLoc = (Vector2){500, 200};
 
@@ -121,6 +122,11 @@ int main(void){
     if(DidClickButton(render_ppm, mouse)) {
       write_file_to_buf("render.ppm");
       printf("[DEBUG] outputted image file!\n");
+    }
+
+    if(DidClickButton(render_bmp, mouse)){
+      generate_image_file();
+      printf("[DEBUG] OUTPUTTED BMP!\n");
     }
 
     if(DidClickButton(clear_, mouse)){

@@ -30,7 +30,7 @@ void RenderFPSGraph(Vector2 startLoc){
     Color c2 = getColorFromFps(avg);
 
     // Draw a line frmo fps_at to fps_at2
-    DrawLine(xP+i, 120-fps_at, xP+i+1, 120-fps_at2, c2);
+    DrawLine(xP+i, 120-fps_at+10, xP+i+1, 120-fps_at2+10, c2);
   }
 
   DrawText("120", startLoc.x-35, startLoc.y-5, 20, BLACK);
