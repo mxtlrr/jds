@@ -64,7 +64,7 @@ int main(void){
 
 
   init_fb(); 
-  Vector2 mouseInFb;
+  Vector2 mouseInFb = {0,0};
   Complex xc = zoomXY;
   
   Complex cc = {0,0};
@@ -125,8 +125,8 @@ int main(void){
     }
 
     if(DidClickButton(render_bmp, mouse)){
-      generate_image_file();
-      printf("[DEBUG] OUTPUTTED BMP!\n");
+      generate_image_file("render.bpm");
+      printf("[DEBUG] rendered image file!\n");
     }
 
     if(DidClickButton(clear_, mouse)){
@@ -164,14 +164,17 @@ int main(void){
       DrawRectangleLines(fbLoc.x-1, fbLoc.y-1, WIDTH+2, HEIGHT+2, BLACK);
 
 
-      for(int i = 0; i < points; i++){
-        Result r = JuliaSet[i]; Point p = r.location;
-        if(p.x > WIDTH || p.y > HEIGHT){
-          printf("[DEBUG] Pixel at (%.3f,%.3f) is out of bounds!\n", p.x,p.y);
+      if(JuliaSet[0].location.x != 0) asm("nop"); // Do nothing if 
+      else {
+        for(int i = 0; i < points; i++){
+          Result r = JuliaSet[i]; Point p = r.location;
+          if(p.x > WIDTH || p.y > HEIGHT){
+            printf("[DEBUG] Pixel at (%.3f,%.3f) is out of bounds!\n", p.x,p.y);
+          }
+          else putpixel(p.x, p.y, palette[JuliaSet[i].iterations]);
         }
-        else putpixel(p.x, p.y, palette[JuliaSet[i].iterations]);
-      }
       render_fb(fbLoc);
+      }
 
       update_FPSGraph();
       RenderFPSGraph((Vector2){200, 10});

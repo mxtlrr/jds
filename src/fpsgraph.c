@@ -19,11 +19,12 @@ Color getColorFromFps(uint8_t fps){
 
 void RenderFPSGraph(Vector2 startLoc){
   int xP = startLoc.x; int yP = startLoc.y;
-  for(int i = 0; i < 300; i++){
-    uint8_t fps_at  = Graph_fps[i];
-    uint8_t fps_at2 = fps_at;
-    if(i+1 > 300);
-    else fps_at2 = Graph_fps[i+1];
+  for (uint16_t i = 0; i < GR_WIDTH; i++) {
+    uint8_t fps_at = Graph_fps[i];
+    uint8_t fps_at2 = 0;
+    if (i + 1 < GR_WIDTH) {
+        fps_at2 = Graph_fps[i + 1];
+    }
 
     uint8_t avg = (fps_at+fps_at2)/2;
 //    Color c  = getColorFromFps(fps_at);

@@ -6,7 +6,10 @@ ifeq ($(OS),Windows_NT)
 endif
 
 GIT_VERSION := "$(shell git describe --abbrev=6 --always --tags)"
-CFLAGS := -Iinclude -DVERSION=\"$(GIT_VERSION)\" $(LDFLAGS) -g
+CFLAGS := -Iinclude -DVERSION=\"$(GIT_VERSION)\" $(LDFLAGS) -Wall -Wextra -pedantic\
+					-Werror $(OPTIONAL_FLAGS)
+
+OPTIONAL_FLAGS ?= -g
 
 SRC_DIR := src
 OBJ_DIR := obj
