@@ -12,6 +12,8 @@
 #include "math/complex.h"
 #include "math/parse-input.h"
 
+#define VV_VERSION "v0.1-rc1"
+
 void _(){}
 
 int main(void){
@@ -159,7 +161,7 @@ int main(void){
       DrawText(TextFormat("Zooming in at %.3f%s%.3fi", xc.re, (xc.im > 0) ? "+" : "", xc.im), fbLoc.x+WIDTH-250,
           fbLoc.y-25, 20, BLACK);
       DrawText(TextFormat("Zoom: %.6f", zoom), fbLoc.x+10, zoomInB.xy.y, 20, BLACK);
-
+      DrawText(TextFormat("Runnig JDS %s", VV_VERSION), 10, 750, 10, BLACK);
       // Framebuffer area
       DrawRectangleLines(fbLoc.x-1, fbLoc.y-1, WIDTH+2, HEIGHT+2, BLACK);
 
