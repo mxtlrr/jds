@@ -100,6 +100,13 @@ int main(void){
       GenerateJuliaSet(cc, R);
     }
 
+
+    // Easier than using buttons
+    float mouseWheel = GetMouseWheelMove();
+    if(mouseWheel != 0.0f && IsMouseOverFb(mouse, fbLoc)){
+      (mouseWheel == 1.0f) ? zoomIn(ZOOMIN_FACTOR, R, cc) 
+            : zoomIn(ZOOMOUT_FACTOR, R, cc);
+    }
     // Zoom in / out
     if(DidHoldButton(zoomInB, mouse))  zoomIn(ZOOMIN_FACTOR,  R, cc);
     if(DidHoldButton(zoomOutB, mouse)) zoomIn(ZOOMOUT_FACTOR, R, cc);
