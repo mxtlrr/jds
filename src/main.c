@@ -127,7 +127,7 @@ int main(void){
     }
 
     if(DidClickButton(render_bmp, mouse)){
-      generate_image_file("render.bpm");
+      generate_image_file("render.bmp");
       printf("[DEBUG] rendered image file!\n");
     }
 
