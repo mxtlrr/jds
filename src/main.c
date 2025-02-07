@@ -23,7 +23,7 @@ int main(void){
   setZoomXY((Complex){0.072,-0.039});          // Zoom into the origin.
   int points = 0;
 
-  SetTraceLogCallback(_);
+  // SetTraceLogCallback(_);
   InitWindow(1200, 768, TextFormat("JDS git-%s", VERSION));
   SetTargetFPS(120);
 
@@ -71,6 +71,7 @@ int main(void){
   
   Complex cc = {0,0};
   float R = 0.0f;
+
   while(!WindowShouldClose()){
     Vector2 mouse = GetMousePosition();
     
@@ -78,7 +79,7 @@ int main(void){
     if(c.input_data[0] != 0 && (strcmp(c.input_data, "") != 0)){
       cc = str_to_complex(c.input_data);
       R = determine_R(cc, s.actual);
-      //printf("Complex: %.3f, %.3fi | R=%.8f\n", cc.re, cc.im, R);
+      printf("Complex: %.3f, %.3fi | R=%.8f\n", cc.re, cc.im, R);
     }
 
     if(IsMouseOverFb(mouse, fbLoc)){
@@ -113,17 +114,9 @@ int main(void){
     
 
     if(DidClickButton(draw_fb, mouse)){
-      // Create the palette from the set thing
-      char value = color.input_data[0];
-      // TODO: check if this is uppercase or lowercase
-      if(value != 0){
-        // Determine what to change
-        uint8_t nv = 0;
-        if(value == 'r') nv = CHANGE_R;
-        if(value == 'g') nv = CHANGE_G;
-        if(value == 'b') nv = CHANGE_B;
-        generate_palette(0xf, nv, palette);
-      } else generate_palette(0xf, 2, palette); // Let's do blue:)
+      // TODO: generate palette from the "which color to change"
+      // input box.
+
       // Generate the julia set
       points = GenerateJuliaSet(cc, R);
     }
@@ -168,7 +161,7 @@ int main(void){
       DrawText(TextFormat("Zooming in at %.3f%s%.3fi", xc.re, (xc.im > 0) ? "+" : "", xc.im), fbLoc.x+WIDTH-250,
           fbLoc.y-25, 20, BLACK);
       DrawText(TextFormat("Zoom: %.6f", zoom), fbLoc.x+10, zoomInB.xy.y, 20, BLACK);
-      DrawText(TextFormat("Runnig JDS %s", VV_VERSION), 10, 750, 10, BLACK);
+      DrawText(TextFormat("Running JDS %s", VV_VERSION), 10, 750, 10, BLACK);
       // Framebuffer area
       DrawRectangleLines(fbLoc.x-1, fbLoc.y-1, WIDTH+2, HEIGHT+2, BLACK);
 
@@ -177,12 +170,9 @@ int main(void){
       else {
         for(int i = 0; i < points; i++){
           Result r = JuliaSet[i]; Point p = r.location;
-          if(p.x > WIDTH || p.y > HEIGHT){
-            printf("[DEBUG] Pixel at (%.3f,%.3f) is out of bounds!\n", p.x,p.y);
-          }
-          else putpixel(p.x, p.y, palette[JuliaSet[i].iterations]);
+          putpixel(p.x, p.y, 0x037bfc);
         }
-      render_fb(fbLoc);
+        render_fb(fbLoc);
       }
 
       update_FPSGraph();

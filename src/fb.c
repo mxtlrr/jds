@@ -1,16 +1,23 @@
 #include "fb.h"
 
-uint16_t buffer[307200] = {0};
+uint32_t buffer[307200] = {0};
 Texture2D rendered_texture;
 
-void putpixel(int x, int y, uint16_t color) {
-  buffer[y * 640 + x] = color;
+void putpixel(int x, int y, uint32_t color) {
+  // Individual color bits
+  uint8_t r = (color >> 16) & 0xFF;
+  uint8_t g = (color >> 8) & 0xFF;
+  uint8_t b = (color) & 0xFF;
+
+  uint32_t formedcolor = (b << 16) | (g << 8) | r;  // Generate R8G8B8
+  buffer[y * 640 + x] = (0xff << 24) | formedcolor; // Append A to the front.
+  // It's ABGR because x86 is little endian.
 }
 
 void init_fb(){
   rendered_texture = LoadTextureFromImage((Image){
-    .data = buffer, .width = WIDTH, .height = 480,
-    .mipmaps = 1, .format = PIXELFORMAT_UNCOMPRESSED_R4G4B4A4
+    .data = buffer, .width = WIDTH, .height = HEIGHT,
+    .mipmaps = 1, .format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8
   });
 }
 
