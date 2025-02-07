@@ -19,11 +19,14 @@ void _(){}
 int main(void){
   /* Before we start rendering, let's initialize:
    * palette, zoom, center zoom */
-  generate_palette(0x000f, CHANGE_R, palette); // Set palette
+  generate_palette(CHANGE_G, palette); // Set palette
+  for(int i = 0; i <256; i++) printf("%06x\n", palette[i]);
+  // return 0;
+  // return 0;
   setZoomXY((Complex){0.072,-0.039});          // Zoom into the origin.
   int points = 0;
 
-  // SetTraceLogCallback(_);
+  SetTraceLogCallback(_);
   InitWindow(1200, 768, TextFormat("JDS git-%s", VERSION));
   SetTargetFPS(120);
 
@@ -79,7 +82,6 @@ int main(void){
     if(c.input_data[0] != 0 && (strcmp(c.input_data, "") != 0)){
       cc = str_to_complex(c.input_data);
       R = determine_R(cc, s.actual);
-      printf("Complex: %.3f, %.3fi | R=%.8f\n", cc.re, cc.im, R);
     }
 
     if(IsMouseOverFb(mouse, fbLoc)){
@@ -170,7 +172,7 @@ int main(void){
       else {
         for(int i = 0; i < points; i++){
           Result r = JuliaSet[i]; Point p = r.location;
-          putpixel(p.x, p.y, 0x037bfc);
+          putpixel(p.x, p.y, palette[r.iterations]);
         }
         render_fb(fbLoc);
       }
