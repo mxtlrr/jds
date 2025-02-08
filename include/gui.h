@@ -48,3 +48,22 @@ typedef struct Input {
 bool MouseOverInputArea(Vector2 i, Vector2 e);
 void UpdateInputBox(Input* i);
 void DrawInput(Input i);
+
+
+/* Checkboxes */
+typedef struct Checkbox {
+  Vector2 location;
+  bool isSelected;
+  
+  // Optional. This won't be displayed if label is null.
+  struct {
+    char label[30];
+    int fontSize;
+  } label;
+} Checkbox;
+
+void drawCheckbox(Checkbox c);
+void updateCheckbox(Checkbox* c, Vector2 m);
+
+
+

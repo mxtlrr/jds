@@ -82,3 +82,17 @@ bool DidHoldButton(Button b, Vector2 m){
   return (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) &&
       internal_ismousein(b.xy, b.dim.x, b.dim.y, m);
 }
+
+
+/* Checkbox */
+void drawCheckbox(Checkbox c){
+  DrawRectangle(c.location.x, c.location.y, 40, 40, GRAY);
+  DrawRectangleLines(c.location.x, c.location.y, 40, 40, BLACK);
+  if(c.label.label[0] != 0x00){
+    DrawText(c.label.label, c.location.x+50, c.location.y+10,
+             c.label.fontSize, BLACK);
+  }
+  // Active indicator
+  if(c.isSelected) DrawText("X", c.location.x+7, c.location.y, 40, BLACK);
+}
+
