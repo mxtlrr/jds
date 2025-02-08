@@ -105,12 +105,14 @@ int main(void){
     float mouseWheel = GetMouseWheelMove();
     if(mouseWheel != 0.0f && IsMouseOverFb(mouse, fbLoc)){
       (mouseWheel == 1.0f) ? zoomIn(ZOOMIN_FACTOR, R, cc) 
-            : zoomIn(ZOOMOUT_FACTOR, R, cc);
+            : ((zoom <= 2.5) ? zoomIn(ZOOMOUT_FACTOR, R, cc) : ((void)0));
+      // NOTE: i couldn't add (asm("nop")), so (void)0 pretty much does the same thing IIRC.
     }
     // Zoom in / out
     if(DidHoldButton(zoomInB, mouse))  zoomIn(ZOOMIN_FACTOR,  R, cc);
-    if(DidHoldButton(zoomOutB, mouse)) zoomIn(ZOOMOUT_FACTOR, R, cc);
-    
+    if(zoom <= 2.5){
+      if(DidHoldButton(zoomOutB, mouse)) zoomIn(ZOOMOUT_FACTOR, R, cc);
+    }
 
     if(DidClickButton(draw_fb, mouse)){
       char v = color.input_data[0];
