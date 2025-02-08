@@ -1,6 +1,6 @@
 #include "math/julia.h"
 
-uint16_t palette[16];
+uint32_t palette[256];
 
 double scale_coord(int p, int sd, double min, double max) {
   return min + ((double)p / (sd - 1)) * (max - min);

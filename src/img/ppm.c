@@ -5,21 +5,16 @@ void write_file_to_buf(char* filename) {
   fprintf(fp, "P6\n%d %d\n255\n", WIDTH, HEIGHT);
   
   for (int i = 0; i < WIDTH * HEIGHT; i++) {
-    int r = ((buffer[i] >> 8) >> 4) * 17;
-    int g = ((buffer[i] >> 8) & 0x0f) * 17;
-    int b = ((buffer[i] & 0xff) >> 4) * 17;
-    int a = ((buffer[i] & 0xff) & 0x0f) * 17;
+    uint32_t color = buffer[i];
+    // Buffer data is AGBR, i.e.
+    // 0xff037bfc.
+    uint8_t a = (color >> 24);
+    uint8_t b = ((color>>16) & 0xff);
+    uint8_t g = ((color>> 8) & 0xff);
+    uint8_t r = color & 0xff;
 
-    if(a == 0){ // Alpha != 0
-      fputc(255, fp);
-      fputc(255, fp);
-      fputc(255, fp);
-    } else {
-      fprintf(fp, "%c%c%c",r,g,b);
-      // fputc(r, fp);
-      // fputc(g, fp);
-      // fputc(b, fp);
-    }
+    // gross
+    (a==0) ? (fprintf(fp,"%c%c%c",255,255,255)) : (fprintf(fp,"%c%c%c",r,g,b));
   }
 
   fclose(fp);

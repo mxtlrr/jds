@@ -10,7 +10,7 @@
 #define JULIA_SET_SIZE 10000000
 #define MAX_ITERATIONS 16
 
-extern uint16_t palette[16];
+extern uint32_t palette[256];
 
 typedef struct Point {
   float x;

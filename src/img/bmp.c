@@ -65,17 +65,16 @@ void write_header(const char *file, uint32_t* data) {
 void generate_image_file(char* filename){
   uint32_t color[640*480];
   for(int i = 0; i < (640*480); i++){
-    int r = ((buffer[i] >> 8) >> 4) * 17;
-    int g = ((buffer[i] >> 8) & 0x0f) * 17;
-    int b = ((buffer[i] & 0xff) >> 4) * 17;
-    int a = ((buffer[i] & 0xff) & 0x0f) * 17;
+    uint32_t color2 = buffer[i];
+    
+    uint8_t a = (color2 >> 24);
+    uint8_t b = ((color2>>16) & 0xff);
+    uint8_t g = ((color2>> 8) & 0xff);
+    uint8_t r = color2 & 0xff;
 
     if(a==0) color[i] = 0xFFFFFF;
-    else {
-      color[i] = (b<<16)|(g<<8)|r;
-    }
+    else     color[i] = (b<<16)|(g<<8)|r;
   }
 
-  // Pluh!
   write_header(filename, color);
 }
