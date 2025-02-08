@@ -64,6 +64,4 @@ typedef struct Checkbox {
 
 void drawCheckbox(Checkbox c);
 void updateCheckbox(Checkbox* c, Vector2 m);
-
-
-
+void checkboxCheckOthers(Checkbox* a, Checkbox* b, Checkbox* c, Vector2 mouse);

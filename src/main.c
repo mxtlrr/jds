@@ -39,8 +39,13 @@ int main(void){
     .counter = 0, .input_area = {.x = 50, .y = 375}, .end_area = {.x = 300,.y = c.input_area.y+35},
     .max = INP_MAX };
 
-  Input color = { .counter = 0, .input_area = {.x = 50, .y = 275},
-    .end_area = {.x = 300, .y = color.input_area.y+35}, .max = 1 };
+  /* Color checkboxes */
+  Checkbox cRed = { .location = {50, 275}, .isSelected = false,
+    .label = {.label = "Red", .fontSize = 20}};
+  Checkbox cGreen = { .location = {150, 275}, .isSelected = false,
+    .label = {.label = "Green", .fontSize = 20}};
+  Checkbox cBlue = { .location = {270, 275}, .isSelected = false,
+    .label = {.label = "Blue", .fontSize = 20}};
 
   Button draw_fb = { .xy = {.x = 120, .y = 550},.dim = {.x = 75, .y = 25},
     .neutral_color = GRAY, .clicked_color = DARKGRAY, .text = "DRAW" };
@@ -100,13 +105,11 @@ int main(void){
       GenerateJuliaSet(cc, R);
     }
 
-
-    // Easier than using buttons
     float mouseWheel = GetMouseWheelMove();
     if(mouseWheel != 0.0f && IsMouseOverFb(mouse, fbLoc)){
       (mouseWheel == 1.0f) ? zoomIn(ZOOMIN_FACTOR, R, cc) 
             : ((zoom <= 2.5) ? zoomIn(ZOOMOUT_FACTOR, R, cc) : ((void)0));
-      // NOTE: i couldn't add (asm("nop")), so (void)0 pretty much does the same thing IIRC.
+      // NOTE: i couldn't add (asm("nop")), so (void)0 compiles to asm("nop");
     }
     // Zoom in / out
     if(DidHoldButton(zoomInB, mouse))  zoomIn(ZOOMIN_FACTOR,  R, cc);
@@ -115,15 +118,13 @@ int main(void){
     }
 
     if(DidClickButton(draw_fb, mouse)){
-      char v = color.input_data[0];
-      if(v == 0) generate_palette(CHANGE_B, palette);
-      else {
-        uint8_t nn = CHANGE_B;
-        if(v == 'r') nn = CHANGE_R;
-        if(v == 'g') nn = CHANGE_G;
-        if(v == 'b') nn = CHANGE_B;
-        generate_palette(nn, palette);
-      }
+      // Palette. TODO: improve, i should just need one if statement, not three
+      uint8_t nv = CHANGE_B;
+      if(cRed.isSelected)     nv = CHANGE_R;
+      if(cGreen.isSelected)   nv = CHANGE_G;
+      if(cBlue.isSelected)    nv = CHANGE_B;
+
+      generate_palette(nv, palette);
       // Generate the julia set
       points = GenerateJuliaSet(cc, R);
     }
@@ -140,7 +141,7 @@ int main(void){
 
     if(DidClickButton(clear_, mouse)){
       memset(c.input_data, 0, c.max); c.counter = 0;
-      memset(color.input_data, 0, 3); color.counter = 0;
+      cRed.isSelected = false; cGreen.isSelected = false; cBlue.isSelected = false;
     }
 
     BeginDrawing();
@@ -150,7 +151,11 @@ int main(void){
       // update and draw
       UpdateSlider(&s, mouse);
       UpdateInputBox(&c); DrawInput(c);
-      UpdateInputBox(&color); DrawInput(color);
+      
+      drawCheckbox(cRed); drawCheckbox(cGreen); drawCheckbox(cBlue);
+      updateCheckbox(&cRed,mouse);updateCheckbox(&cGreen,mouse);updateCheckbox(&cBlue,mouse);
+      checkboxCheckOthers(&cRed, &cGreen, &cBlue, mouse);
+
       render_button(draw_fb, mouse); render_button(render_ppm, mouse); render_button(zoomOutB, mouse);
       render_button(render_bmp, mouse); render_button(clear_, mouse); render_button(zoomInB, mouse);
       render_button(resetZoom, mouse);
@@ -160,7 +165,7 @@ int main(void){
 
 
       // Text that tells you what we're doing
-      DrawText("Which pixel data to change?", color.input_area.x-10, color.input_area.y-40, 20, BLACK);
+      DrawText("Which pixel data to change?", cRed.location.x-10, cRed.location.y-40, 20, BLACK);
       DrawText("c, for f(z) = z^2 + c", c.input_area.x+15, c.input_area.y-40, 20, BLACK);
       DrawText(TextFormat("Accuracy multiplier: %.0f", s.actual), s.pos.x+(s.pos.x/2), s.pos.y-40, 20, BLACK);
 
@@ -173,7 +178,7 @@ int main(void){
       DrawRectangleLines(fbLoc.x-1, fbLoc.y-1, WIDTH+2, HEIGHT+2, BLACK);
 
 
-      if(JuliaSet[0].location.x != 0) asm("nop"); // Do nothing if 
+      if(JuliaSet[0].location.x != 0) __asm__("nop");
       else {
         for(int i = 0; i < points; i++){
           Result r = JuliaSet[i]; Point p = r.location;

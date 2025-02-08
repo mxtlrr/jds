@@ -85,6 +85,14 @@ bool DidHoldButton(Button b, Vector2 m){
 
 
 /* Checkbox */
+void updateCheckbox(Checkbox* c, Vector2 m){
+  if(internal_ismousein((c->location), 40, 40, m)){
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+      c->isSelected = !c->isSelected;
+  }
+}
+
+
 void drawCheckbox(Checkbox c){
   DrawRectangle(c.location.x, c.location.y, 40, 40, GRAY);
   DrawRectangleLines(c.location.x, c.location.y, 40, 40, BLACK);
@@ -94,5 +102,14 @@ void drawCheckbox(Checkbox c){
   }
   // Active indicator
   if(c.isSelected) DrawText("X", c.location.x+7, c.location.y, 40, BLACK);
+}
+
+
+
+// TODO: i need to think of a better way to do this :sob:
+void checkboxCheckOthers(Checkbox* a, Checkbox* b, Checkbox* c, Vector2 mouse){
+  if(internal_ismousein(a->location, 40, 40, mouse)){ b->isSelected = false; c->isSelected = false; }
+  if(internal_ismousein(b->location, 40, 40, mouse)){ a->isSelected = false; c->isSelected = false; }
+  if(internal_ismousein(c->location, 40, 40, mouse)){ a->isSelected = false; b->isSelected = false; }
 }
 
