@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <math.h>
 
+
+#define MODIFY_AMOUNT_RB 0x1f
 #define PALETTE_SIZE 256
 
 enum PALETTE_MODIFIERS {

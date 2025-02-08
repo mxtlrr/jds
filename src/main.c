@@ -19,11 +19,8 @@ void _(){}
 int main(void){
   /* Before we start rendering, let's initialize:
    * palette, zoom, center zoom */
-  generate_palette(CHANGE_G, palette); // Set palette
-  for(int i = 0; i <256; i++) printf("%06x\n", palette[i]);
-  // return 0;
-  // return 0;
-  setZoomXY((Complex){0.072,-0.039});          // Zoom into the origin.
+  generate_palette(CHANGE_B, palette); // Set palette
+  setZoomXY((Complex){0.072,-0.039});  // Zoom into the origin.
   int points = 0;
 
   SetTraceLogCallback(_);
@@ -116,9 +113,15 @@ int main(void){
     
 
     if(DidClickButton(draw_fb, mouse)){
-      // TODO: generate palette from the "which color to change"
-      // input box.
-
+      char v = color.input_data[0];
+      if(v == 0) generate_palette(CHANGE_B, palette);
+      else {
+        uint8_t nn = CHANGE_B;
+        if(v == 'r') nn = CHANGE_R;
+        if(v == 'g') nn = CHANGE_G;
+        if(v == 'b') nn = CHANGE_B;
+        generate_palette(nn, palette);
+      }
       // Generate the julia set
       points = GenerateJuliaSet(cc, R);
     }
