@@ -85,10 +85,23 @@ bool DidHoldButton(Button b, Vector2 m){
 
 
 /* Checkbox */
+
+Checkbox checkboxes[3] = {
+  { .location = {50, 275}, .isSelected = false,
+    .label = {.label = "Red", .fontSize = 20}},
+  { .location = {150, 275}, .isSelected = false,
+    .label = {.label = "Green", .fontSize = 20}},
+  { .location = {270, 275}, .isSelected = false,
+    .label = {.label = "Blue", .fontSize = 20}},
+};
+
 void updateCheckbox(Checkbox* c, Vector2 m){
   if(internal_ismousein((c->location), 40, 40, m)){
+    c->mousein = true;
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
       c->isSelected = !c->isSelected;
+  } else {
+    c->mousein = false;
   }
 }
 
@@ -104,12 +117,16 @@ void drawCheckbox(Checkbox c){
   if(c.isSelected) DrawText("X", c.location.x+7, c.location.y, 40, BLACK);
 }
 
-
-
-// TODO: i need to think of a better way to do this :sob:
-void checkboxCheckOthers(Checkbox* a, Checkbox* b, Checkbox* c, Vector2 mouse){
-  if(internal_ismousein(a->location, 40, 40, mouse)){ b->isSelected = false; c->isSelected = false; }
-  if(internal_ismousein(b->location, 40, 40, mouse)){ a->isSelected = false; c->isSelected = false; }
-  if(internal_ismousein(c->location, 40, 40, mouse)){ a->isSelected = false; b->isSelected = false; }
+void checkboxCheckOthers(){
+  if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+    for(int i = 0; i < 3; i++){
+      if(checkboxes[i].mousein){
+        // Set every other one to false
+        for(int j = 0; j < 3; j++)
+          if(i != j) (&checkboxes[j])->isSelected = false;
+        break;
+      }
+    }
+  }
 }
 

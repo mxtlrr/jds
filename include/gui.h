@@ -54,6 +54,7 @@ void DrawInput(Input i);
 typedef struct Checkbox {
   Vector2 location;
   bool isSelected;
+  bool mousein;
   
   // Optional. This won't be displayed if label is null.
   struct {
@@ -62,6 +63,9 @@ typedef struct Checkbox {
   } label;
 } Checkbox;
 
+
+extern Checkbox checkboxes[3];
+
 void drawCheckbox(Checkbox c);
 void updateCheckbox(Checkbox* c, Vector2 m);
-void checkboxCheckOthers(Checkbox* a, Checkbox* b, Checkbox* c, Vector2 mouse);
+void checkboxCheckOthers();
