@@ -1,6 +1,5 @@
 #include "math/julia.h"
 
-uint32_t palette[256];
 
 double scale_coord(int p, int sd, double min, double max) {
   return min + ((double)p / (sd - 1)) * (max - min);
@@ -18,7 +17,7 @@ int pixel(Point a, Complex c, int R){
     i++;
   }
 
-  return (i == MAX_ITERATIONS) ? 0 : i;
+  return (i == MAX_ITERATIONS) ? MAX_ITERATIONS : i;
 }
 
 

@@ -16,7 +16,6 @@ void _(){}
 int main(void){
   /* Before we start rendering, let's initialize:
    * palette, zoom, center zoom */
-  generate_palette(CHANGE_B, palette); // Set palette
   setZoomXY((Complex){0.072,-0.039});  // Zoom into the origin.
   int points = 0;
 
@@ -100,6 +99,7 @@ int main(void){
             : ((zoom <= 2.5) ? zoomIn(ZOOMOUT_FACTOR, R, cc) : ((void)0));
       // NOTE: i couldn't add (asm("nop")), so (void)0 compiles to asm("nop");
     }
+
     // Zoom in / out
     if(DidHoldButton(zoomInB, mouse))  zoomIn(ZOOMIN_FACTOR,  R, cc);
     if(zoom <= 2.5){
@@ -107,12 +107,9 @@ int main(void){
     }
 
     if(DidClickButton(draw_fb, mouse)){
-      // Palette. TODO: improve, i should just need one if statement, not three
-      uint8_t nv = CHANGE_B;
-      for(int i = 0; i < 2; i++) if(checkboxes[i].isSelected) nv = i;
-      printf("set nv to %d!\n", nv);
-
-      generate_palette(nv, palette);
+      // TODO: check if should use hardcoded palette,
+      // or user defined palette provided in some sort
+      // of INI file.
       points = GenerateJuliaSet(cc, R);
     }
 
@@ -171,7 +168,7 @@ int main(void){
       else {
         for(int i = 0; i < points; i++){
           Result r = JuliaSet[i]; Point p = r.location;
-          putpixel(p.x, p.y, palette[r.iterations]);
+          putpixel(p.x, p.y, palette[(int)(r.iterations % PALETTE_SIZE)]);
         }
         render_fb(fbLoc);
       }
