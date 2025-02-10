@@ -63,9 +63,8 @@ typedef struct Checkbox {
   } label;
 } Checkbox;
 
-
-extern Checkbox checkboxes[3];
+#define CHECKBOX_COUNT 2
+extern Checkbox checkboxes[CHECKBOX_COUNT];
 
 void drawCheckbox(Checkbox c);
 void updateCheckbox(Checkbox* c, Vector2 m);
-void checkboxCheckOthers();

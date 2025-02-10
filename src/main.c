@@ -136,11 +136,10 @@ int main(void){
       UpdateSlider(&s, mouse);
       UpdateInputBox(&c); DrawInput(c);
       
-      for(int i = 0; i < 3; i++) {
+      for(int i = 0; i < CHECKBOX_COUNT; i++) {
         drawCheckbox(checkboxes[i]);
         updateCheckbox(&checkboxes[i], mouse);
       }
-      checkboxCheckOthers(&checkboxes[0], &checkboxes[1], &checkboxes[2], mouse);
 
       render_button(draw_fb, mouse); render_button(render_ppm, mouse); render_button(zoomOutB, mouse);
       render_button(render_bmp, mouse); render_button(clear_, mouse); render_button(zoomInB, mouse);
@@ -150,7 +149,7 @@ int main(void){
       s.actual = (int)s.actual;
 
       // Text that tells you what we're doing
-      DrawText("Which pixel data to change?", checkboxes[0].location.x-10, checkboxes[0].location.y-40, 20, BLACK);
+      DrawText("Rendering Options", 45, 195, 20, BLACK);
       DrawText("c, for f(z) = z^2 + c", c.input_area.x+15, c.input_area.y-40, 20, BLACK);
       DrawText(TextFormat("Accuracy multiplier: %.0f", s.actual), s.pos.x+(s.pos.x/2), s.pos.y-40, 20, BLACK);
 
