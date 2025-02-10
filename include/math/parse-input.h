@@ -9,7 +9,7 @@
 
 // Each decimal will have some max precision, i.e. 0.45678 (prec=5),
 // this makesit easier to convert
-#define MAX_PRECISION 5
+#define MAX_PRECISION 8
 
 Complex str_to_complex(char* str);
 int countChars(char* s, char b);

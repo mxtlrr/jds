@@ -69,10 +69,10 @@ int main(void){
     Vector2 mouse = GetMousePosition();
     
     // Update complex number and R (escape radius)
-    if(c.input_data[0] != 0 && (strcmp(c.input_data, "") != 0)){
-      cc = str_to_complex(c.input_data);
-      R = determine_R(cc, s.actual);
-    }
+//    if(c.input_data[0] != 0 && (strcmp(c.input_data, "") != 0)){
+//      cc = str_to_complex(c.input_data);
+//      R = determine_R(cc, s.actual);
+//    }
 
     if(IsMouseOverFb(mouse, fbLoc)){
       mouseInFb = getMousePosInFB(mouse, fbLoc);
@@ -107,6 +107,8 @@ int main(void){
     }
 
     if(DidClickButton(draw_fb, mouse)){
+      cc = str_to_complex(c.input_data);
+      R = determine_R(cc, s.actual);
       // TODO: check if should use hardcoded palette,
       // or user defined palette provided in some sort
       // of INI file.

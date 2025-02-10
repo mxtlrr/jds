@@ -7,7 +7,7 @@ endif
 
 GIT_VERSION := "$(shell git describe --abbrev=6 --always --tags)"
 CFLAGS := -Iinclude -DVERSION=\"$(GIT_VERSION)\" $(LDFLAGS) -Wall -Wextra -pedantic\
-					-Werror $(OPTIONAL_FLAGS)
+					-Werror $(OPTIONAL_FLAGS) -g
 
 OPTIONAL_FLAGS ?= -g
 
