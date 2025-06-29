@@ -68,12 +68,6 @@ int main(void){
   while(!WindowShouldClose()){
     Vector2 mouse = GetMousePosition();
     
-    // Update complex number and R (escape radius)
-//    if(c.input_data[0] != 0 && (strcmp(c.input_data, "") != 0)){
-//      cc = str_to_complex(c.input_data);
-//      R = determine_R(cc, s.actual);
-//    }
-
     if(IsMouseOverFb(mouse, fbLoc)){
       mouseInFb = getMousePosInFB(mouse, fbLoc);
       if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
@@ -95,23 +89,20 @@ int main(void){
 
     float mouseWheel = GetMouseWheelMove();
     if(mouseWheel != 0.0f && IsMouseOverFb(mouse, fbLoc)){
-      (mouseWheel == 1.0f) ? zoomIn(ZOOMIN_FACTOR, R, cc) 
-            : ((zoom <= 2.5) ? zoomIn(ZOOMOUT_FACTOR, R, cc) : ((void)0));
-      // NOTE: i couldn't add (asm("nop")), so (void)0 compiles to asm("nop");
+      if(mouseWheel == 1.0f) zoomIn(ZOOMIN_FACTOR, R, cc);
+      else {
+        if(zoom <= 2.5) zoomIn(ZOOMOUT_FACTOR, R, cc);
+      }
     }
 
     // Zoom in / out
     if(DidHoldButton(zoomInB, mouse))  zoomIn(ZOOMIN_FACTOR,  R, cc);
-    if(zoom <= 2.5){
-      if(DidHoldButton(zoomOutB, mouse)) zoomIn(ZOOMOUT_FACTOR, R, cc);
-    }
+    if(zoom <= 2.5 && DidHoldButton(zoomOutB, mouse)) zoomIn(ZOOMOUT_FACTOR, R, cc);
 
     if(DidClickButton(draw_fb, mouse)){
       cc = str_to_complex(c.input_data);
       R = determine_R(cc, s.actual);
-      // TODO: check if should use hardcoded palette,
-      // or user defined palette provided in some sort
-      // of INI file.
+      // TODO: check if should use hardcoded palette, or user defined palette provided in some sort of INI file.
       points = GenerateJuliaSet(cc, R);
     }
 
@@ -160,13 +151,13 @@ int main(void){
           fbLoc.y-25, 20, BLACK);
       DrawText(TextFormat("Zoom: %.6f", zoom), fbLoc.x+10, zoomInB.xy.y, 20, BLACK);
       DrawText(TextFormat("Running JDS %s", VERSION), 10, 750, 10, BLACK);
-      DrawRectangleLines(fbLoc.x-1, fbLoc.y-1, WIDTH+2, HEIGHT+2, BLACK);
+      
       // Framebuffer area
+      DrawRectangleLines(fbLoc.x-1, fbLoc.y-1, WIDTH+2, HEIGHT+2, BLACK);
 
 
       // Render julia set
-      if(JuliaSet[0].location.x != 0) __asm__("nop");
-      else {
+      if(JuliaSet[0].location.x == 0) {
         for(int i = 0; i < points; i++){
           Result r = JuliaSet[i]; Point p = r.location;
           putpixel(p.x, p.y, palette[(int)(r.iterations % PALETTE_SIZE)]);
