@@ -114,3 +114,29 @@ void drawCheckbox(Checkbox c){
   // Active indicator
   if(c.isSelected) DrawText("X", c.location.x+7, c.location.y, 40, BLACK);
 }
+
+
+/* Dropdowns */
+void RenderAndUpdateDropdown(Vector2 l, Dropdown* d){
+  DrawRectangleLines(l.x, l.y, DROPDOWN_SIZE, 30, BLACK);
+  DrawRectangle(l.x + (DROPDOWN_SIZE - 30), l.y, 30, 30, GRAY);
+  DrawText(d->current_selection, l.x, (l.y + 5), 20, BLACK);
+
+  if(internal_ismousein((Vector2){l.x + (DROPDOWN_SIZE - 30), l.y}, 30, 30, GetMousePosition())
+        && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    d->shouldRenderSelectionMenu = !d->shouldRenderSelectionMenu;
+  
+  if(d->shouldRenderSelectionMenu){
+    DrawRectangleLines(l.x, l.y+30, DROPDOWN_SIZE, 22*(d->selection_amount), BLACK);
+    Vector2 pos = {l.x, l.y+32};
+    for(uint8_t i = 0; i < d->selection_amount; i++){
+      DrawText(d->options[i], pos.x, pos.y, 20, BLACK);
+      if(internal_ismousein(pos, DROPDOWN_SIZE, 20, GetMousePosition())
+          && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+        strcpy(d->current_selection, d->options[i]);
+        d->shouldRenderSelectionMenu = false;
+      }
+      pos.y += 20;
+    }
+  }
+}

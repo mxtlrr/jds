@@ -2,6 +2,7 @@
 
 #include <raylib.h>
 #include <string.h>
+#include <stdint.h>
 
 /* Slider */
 
@@ -68,3 +69,18 @@ extern Checkbox checkboxes[CHECKBOX_COUNT];
 
 void drawCheckbox(Checkbox c);
 void updateCheckbox(Checkbox* c, Vector2 m);
+
+
+/* Dropdowns */
+#define DROPDOWN_SIZE 170
+
+typedef struct {
+  char    current_selection[30];
+  char*   options[30];
+  uint8_t selection_amount;
+  bool  shouldRenderSelectionMenu;
+} Dropdown;
+
+// l: Location
+// d: Dropdown
+void RenderAndUpdateDropdown(Vector2 l, Dropdown* d);
