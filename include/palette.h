@@ -8,13 +8,16 @@
 
 #include "math/julia.h"
 
-#define MODIFY_AMOUNT_RB 0x1f
-#define PALETTE_SIZE       15
-
 enum PALETTE_MODIFIERS {
   CHANGE_R = 0,
   CHANGE_G,
   CHANGE_B
 };
 
-extern uint32_t palette[PALETTE_SIZE];
+extern uint32_t palette[];
+
+
+// Technically known as lerp. Adapted from Wikipedia.
+// v1, v2: Values to interpolate
+// t: between [0,1]
+float linear_interpolate(float v1, float v2, float t);

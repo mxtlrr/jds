@@ -8,3 +8,7 @@ uint32_t palette[] = {
   0xf1e9bf, 0xf8c95f, 0xffaa00,
   0xcc8000, 0x995700, 0x6a3403
 };
+
+float linear_interpolate(float v1, float v2, float t){
+  return (1 - t) * v1 + t * v2;
+}

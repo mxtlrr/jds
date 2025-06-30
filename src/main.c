@@ -160,7 +160,19 @@ int main(void){
       if(JuliaSet[0].location.x == 0) {
         for(int i = 0; i < points; i++){
           Result r = JuliaSet[i]; Point p = r.location;
-          putpixel(p.x, p.y, palette[(int)(r.iterations % PALETTE_SIZE)]);
+          float iteration = r.iterations;
+          if(r.iterations > MAX_ITERATIONS){
+            float log_zn = log(p.x * p.x) / 2;
+            float nu     = log(log_zn / log(2)) / log(2);
+            iteration    = iteration + 1 - nu;
+          }
+
+          int color1 = palette[(int)floor(iteration)];
+          int color2 = palette[(int)floor(iteration) + 1];
+
+          int new_color = (int)linear_interpolate(color1, color2, 
+                    fmod(iteration, 1.f));
+          putpixel(p.x, p.y, new_color);
         }
         render_fb(fbLoc);
       }
